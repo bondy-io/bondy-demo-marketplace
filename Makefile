@@ -1,7 +1,10 @@
+.PHONY: all
+all: bondy_docker market
 
 .PHONY: bondy_docker
 bondy_docker:
-	docker run \
+	docker ps | grep bondy-demo > /dev/null \
+	|| docker run \
 		-e BONDY_ERL_NODENAME=bondy1@127.0.0.1 \
 		-e BONDY_ERL_DISTRIBUTED_COOKIE=bondy \
 		-p 18080:18080 \

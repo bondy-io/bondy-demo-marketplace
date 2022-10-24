@@ -9,6 +9,24 @@ The demo implement a simple market maker using [Bondy](http://docs.getbondy.io) 
 * python 3.7+
 * Docker
 
+## Demo
+
+The demo environment is started by the default make target.
+``` bash
+% make
+```
+
+This will run Bondy on docker (if necessary) then start the marketplace.
+
+**Note:** Bondy takes a few seconds to start, initialize and be ready to accept connections. You should see the market script trying to reconnect until Bondy is ready. Typically, a series of logs similar to:
+```
+2022-10-24T12:33:12 trying transport 0 ("ws://localhost:18080/ws") using connect delay 0
+2022-10-24T12:33:12 connecting once using transport type "websocket" over endpoint "tcp"
+2022-10-24T12:33:12 Connection failed: TransportLost: failed to complete connection
+2022-10-24T12:33:12 trying transport 0 ("ws://localhost:18080/ws") using connect delay 2.198465193966359
+2022-10-24T12:33:14 connecting once using transport type "websocket" over endpoint "tcp"
+```
+
 ## Bondy
 
 You run the Bondy router from the `make` target: `bondy_docker`.
