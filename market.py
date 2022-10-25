@@ -6,8 +6,11 @@ from autobahn.asyncio.component import Component
 from autobahn.asyncio.component import run
 
 from demo_config import create_autobahn_component_config
+from demo_config import MARKET_BIDDER_ADD
+from demo_config import MARKET_BIDDER_GONE
 from demo_config import MARKET_ITEM_ADDED
 from demo_config import MARKET_GET
+from demo_config import MARKET_ITEM_GET
 from demo_config import MARKET_ITEM_BID
 from demo_config import MARKET_ITEM_SELL
 from demo_config import MARKET_ITEM_NEW_PRICE
@@ -24,6 +27,7 @@ class Market:
         self._session = None
 
         self._items = {}
+        self._bidders = set()
 
     def run(self):
 
@@ -33,12 +37,40 @@ class Market:
 
         self._session = session
         self._session.register(self._get_items, MARKET_GET)
+        self._session.register(self._get_item, MARKET_ITEM_GET)
         self._session.register(self._on_new_item, MARKET_ITEM_SELL)
         self._session.register(self._on_bid, MARKET_ITEM_BID)
+        self._session.register(self._on_new_bidder, MARKET_BIDDER_ADD)
+        self._session.register(self._on_bidder_gone, MARKET_BIDDER_GONE)
+
+    def _on_new_bidder(self, name):
+        if not name or name in self._bidders:
+            return False
+
+        else:
+            self._bidders.add(name)
+            return True
+
+    def _on_bidder_gone(self, name):
+
+        if not name or name not in self._bidders:
+            return
+
+        print(f"{name} left, cancel thier bids.")
+        self._bidders.remove(name)
+
+        for item in self._items.values():
+            if item.is_on_offer() and item.winner == name:
+                item.winner = None
 
     def _get_items(self):
 
         return [item.wamp_pack() for item in self._items.values()]
+
+    def _get_item(self, name):
+
+        item = self._items.get(name)
+        return item.wamp_pack() if item is not None else None
 
     def _on_new_item(self, name, price, deadline):
 
@@ -50,14 +82,17 @@ class Market:
         self._session.publish(MARKET_ITEM_ADDED, *item.wamp_pack())
         return True
 
-    def _on_bid(self, name, bid):
+    def _on_bid(self, item_name, bid, bidder_name):
 
-        item = self._items.get(name)
+        if bidder_name not in self._bidders:
+            return False
+
+        item = self._items.get(item_name)
         if item is None:
             return False
 
-        if item.bid(bid):
-            self._session.publish(MARKET_ITEM_NEW_PRICE, name, bid)
+        if item.bid(bid, bidder_name):
+            self._session.publish(MARKET_ITEM_NEW_PRICE, item.wamp_pack())
             return True
 
         else:

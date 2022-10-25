@@ -7,6 +7,8 @@ from autobahn.asyncio.component import run
 import txaio
 
 from demo_config import create_autobahn_component_config
+from demo_config import MARKET_BIDDER_ADD
+from demo_config import MARKET_BIDDER_GONE
 from demo_config import MARKET_GET
 from demo_config import MARKET_ITEM_BID
 from demo_config import MARKET_ITEM_SELL
@@ -21,10 +23,18 @@ class Client:
         self._component.on("join", self._on_join)
 
         self._session = None
+        self._name = None
 
     def run(self):
 
         run([self._component])
+
+    async def _identify(self):
+
+        while not self._name:
+            self._name = input("Enter your name: ")
+        while not await self._session.call(MARKET_BIDDER_ADD, self._name):
+            self._name = input("Name already taken, please enter a different one: ")
 
     async def _print_help(self, *args):
 
@@ -67,11 +77,12 @@ Arguments can be provided (whitespace separated) otherwise they will be queried.
         len_price = max(len_price, len("Price"))
 
         deadlines = map(lambda i: f"{i.deadline.astimezone():%H:%M:%S}", items)
+        winners = map(lambda i: i.winner if i.winner else "-", items)
 
-        line = f"{{0:{len_name}}}    {{1:>{len_price}}}    {{2}}"
-        print(line.format("Item", "Price", "Deadline"))
-        print(line.format(len_name * "-", len_price * "-", 10 * "-"))
-        for line_args in zip(names, prices_str, deadlines):
+        line = f"{{0:{len_name}}}    {{1:>{len_price}}}    {{2}}    {{3}}"
+        print(line.format("Item", "Price", "Deadline", "Winner"))
+        print(line.format(len_name * "-", len_price * "-", 8 * "-", 6 * "-"))
+        for line_args in zip(names, prices_str, deadlines, winners):
             print(line.format(*line_args))
         print()
 
@@ -105,7 +116,7 @@ Arguments can be provided (whitespace separated) otherwise they will be queried.
             price = float(input("Bid: "))
 
         print("Bid accepted\n") if await self._session.call(
-            MARKET_ITEM_BID, name, price
+            MARKET_ITEM_BID, name, price, self._name
         ) else print("Bid rejected\n")
 
     async def _on_join(self, session, details):
@@ -113,6 +124,7 @@ Arguments can be provided (whitespace separated) otherwise they will be queried.
         self._session = session
 
         print(f"\nWelcome to '{session.realm}' marketplace")
+        await self._identify()
         await self._print_help()
         action = ""
         args = None
@@ -142,6 +154,11 @@ Arguments can be provided (whitespace separated) otherwise they will be queried.
             action, *args = user_input if 0 < len(user_input) else ("",)
 
         print("Bye.")
+        try:
+            await self._session.call(MARKET_BIDDER_GONE, self._name)
+
+        except:
+            pass
         session.leave()
 
 
