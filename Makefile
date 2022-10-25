@@ -28,6 +28,16 @@ client: ${VENV}
 	source venv/${VENV}/bin/activate; \
 		python3 client.py
 
+BOT_NAME?=Bob
+BOT_INCR?=1
+BOT_LIMIT?=10
+BOT_LAG?=5
+
+.PHONY: bot
+bot: ${VENV}
+	source venv/${VENV}/bin/activate; \
+		python3 bot.py ${BOT_NAME} ${BOT_INCR} ${BOT_LIMIT} ${BOT_LAG}
+
 PIP_REQS_FILE:=pip_reqs.txt
 
 .PHONY: ${VENV}

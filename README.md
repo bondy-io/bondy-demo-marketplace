@@ -38,6 +38,22 @@ A client is available to interact with the market.
 
 It will first print the help and prompt you to enter a command.
 
+### Bot
+
+A bot has a name (`BOT_NAME` variable) and is configured to:
+* buy any item cheaper than a given price (`BOT_LIMIT` variable)
+* bid adding a given amount to the highest bid (`BOT_INCR` variable)
+* take some time (`BOT_LAG` variable) to perform the bid, i.e. a lag between computing the bid price and actually bidding.
+
+By default, the bot is named Bob, bids on anything cheaper than $10, increments the prices by $1 and takes 5s to bid.
+``` bash
+% make bot
+
+% make bot BOT_NAME=Alice BOT_LIMIT=12 BOT_INCR=2
+```
+
+Note: A bot gives up on an item after 3 consecutive bidding failures.
+
 ## Bondy
 
 You run the Bondy router from the `make` target: `bondy_docker`.
