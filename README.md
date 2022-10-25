@@ -11,6 +11,8 @@ The demo implement a simple market maker using [Bondy](http://docs.getbondy.io) 
 
 ## Demo
 
+### Setup
+
 The demo environment is started by the default make target.
 ``` bash
 % make
@@ -26,6 +28,15 @@ This will run Bondy on docker (if necessary) then start the marketplace.
 2022-10-24T12:33:12 trying transport 0 ("ws://localhost:18080/ws") using connect delay 2.198465193966359
 2022-10-24T12:33:14 connecting once using transport type "websocket" over endpoint "tcp"
 ```
+
+### Interactive client
+
+A client is available to interact with the market.
+``` bash
+% make client
+```
+
+It will first print the help and prompt you to enter a command.
 
 ## Bondy
 

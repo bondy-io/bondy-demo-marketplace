@@ -23,6 +23,11 @@ market: ${VENV}
 	source venv/${VENV}/bin/activate; \
 		python3 market.py
 
+.PHONY: client
+client: ${VENV}
+	source venv/${VENV}/bin/activate; \
+		python3 client.py
+
 PIP_REQS_FILE:=pip_reqs.txt
 
 .PHONY: ${VENV}
