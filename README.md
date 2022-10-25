@@ -54,9 +54,16 @@ Run the marketplace from the `make` target: `market`
 
 This will create the python virtual environment with all the dependencies required to run the script.
 The script then connects to Bondy and register the following URIs:
+* `market.bidder.add`: When a new bigger joins, it has to give a name to be able to bid.
+* `market.bidder.gone`: When a client gently leave the market, i.e. no errors or interuptions.
 * `market.get`: To get all the listed items.
-* `market.item.sell` To put a new item on the market place.
 * `market.item.bid`: To bid on a listed item.
+* `market.item.get`: To get the details of a specific item.
+* `market.item.sell` To put a new item on the market place.
+
+The market publishes the following topics:
+* `market.item.added`: When a new item is on offer.
+* `market.item.new_price`: When a bid was accepted.
 
 ## Troubleshooting
 
