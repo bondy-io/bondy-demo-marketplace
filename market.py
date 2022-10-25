@@ -92,7 +92,7 @@ class Market:
             return False
 
         if item.bid(bid, bidder_name):
-            self._session.publish(MARKET_ITEM_NEW_PRICE, item.wamp_pack())
+            self._session.publish(MARKET_ITEM_NEW_PRICE, *item.wamp_pack())
             return True
 
         else:
