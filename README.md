@@ -38,21 +38,41 @@ A client is available to interact with the market.
 
 It will first print the help and prompt you to enter a command.
 
+A client can only call RPCs on the market:
+* `market.get`: To get all the listed items.
+* `market.item.bid`: To bid on a listed item.
+* `market.item.sell` To put a new item on the market place.
+
+Under the hood it will call `market.bidder.add` to identify itself as a bidder.
+On exit it calls `market.bidder.gone` to dereference itself as a bidder.
+
+Once you are familiar with the marketplace, listing, selling and bidding on items, you can try and compete against a bot.
+
 ### Bot
 
-A bot has a name (`BOT_NAME` variable) and is configured to:
-* buy any item cheaper than a given price (`BOT_LIMIT` variable)
-* bid adding a given amount to the highest bid (`BOT_INCR` variable)
-* take some time (`BOT_LAG` variable) to perform the bid, i.e. a lag between computing the bid price and actually bidding.
-
-By default, the bot is named Bob, bids on anything cheaper than $10, increments the prices by $1 and takes 5s to bid.
+A bot has a name (`BOT_NAME` variable, default: _Bob_) and is configured to:
+* buy any item cheaper than a given price (`BOT_LIMIT` variable, default: $10).
+* bid adding a given amount to the highest bid (`BOT_INCR` variable, default $1).
+* take some time (`BOT_LAG` variable, default: 5s) to perform the bid, i.e. a lag between computing the bid price and actually bidding.
 ``` bash
 % make bot
 
 % make bot BOT_NAME=Alice BOT_LIMIT=12 BOT_INCR=2
 ```
 
-Note: A bot gives up on an item after 3 consecutive bidding failures.
+**Note:** A bot gives up on an item after 3 consecutive bidding failures.
+
+A bot subscribes to 2 topics:
+* `market.item.added`: To know when a new item is on offer.
+* `market.item.new_price`: To know when there is a new accepted bid.
+
+Similarly to the client, it calls some RPCs to try and win some items:
+* `market.bidder.add` to identify itself as a bidder.
+* `market.get`: To get all the listed items when it joins the marketplace.
+* `market.item.bid`: To bid on a listed item.
+* `market.item.get`: To get the details of a specific item for optimum bid.
+
+Once you are familiar with the log printed by the bot, you can try and have several of them competing against each other.
 
 ## Bondy
 
@@ -83,7 +103,7 @@ The market publishes the following topics:
 
 ## Troubleshooting
 
-### Can't set long node name!`
+### Can't set long node name!
 `make bondy_docker` exits immediately.
 The Docker container `bondy-demo` exits with error 1 and the logs are:
 ```
