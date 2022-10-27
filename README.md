@@ -118,39 +118,6 @@ The market publishes the following topics:
 
 ## Troubleshooting
 
-### Can't set long node name!
-`make bondy_docker` exits immediately.
-The Docker container `bondy-demo` exits with error 1 and the logs are:
-```
-=INFO REPORT==== 30-Sep-2022::16:17:19.233492 ===
-Can't set long node name!
-Please check your configuration
-
-=SUPERVISOR REPORT==== 30-Sep-2022::16:17:19.233533 ===
-    supervisor: {local,net_sup}
-    errorContext: start_error
-    reason: {'EXIT',nodistribution}
-    offender: [{pid,undefined},
-               {id,net_kernel},
-               {mfargs,{net_kernel,start_link,
-                                   [#{clean_halt => true,
-                                      name => 'longnameacec5441-bondy',
-                                      name_domain => longnames,
-                                      supervisor => net_sup}]}},
-               {restart_type,permanent},
-               {significant,false},
-               {shutdown,2000},
-               {child_type,worker}]
-
-Kernel pid terminated (application_controller) ({application_start_failure,kernel,{{shutdown,{failed_to_start_child,net_sup,{shutdown,{failed_to_start_child,net_kernel,{'EXIT',nodistribution}}}}},{kernel,start,[normal,[]]}}})
-
-Crash dump is being written to: /dev/null...done
-```
-
-FIX ME!
-Make sure `epmd` is running:
-`epmd -daemon` does not work
-
 ### docker: Error response from daemon: Conflict.
 There is already a container with `bondy-demo` name running in Docker.
 As the message says, remove the duplicate and start over.
