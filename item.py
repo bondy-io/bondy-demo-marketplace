@@ -45,13 +45,18 @@ class Item:
 
     def wamp_pack(self):
 
-        if self.winner:
-            return self.name, self.price, self.deadline.isoformat(), self.winner
+        item_repr = dict(
+            name=self.name,
+            price=self.price,
+            deadline=self.deadline.isoformat(),
+        )
 
-        else:
-            return self.name, self.price, self.deadline.isoformat()
+        if self.winner:
+            item_repr["winner"] = self.winner
+
+        return item_repr
 
     @classmethod
     def wamp_unpack(cls, details):
 
-        return cls(*details)
+        return cls(**details)

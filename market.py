@@ -79,7 +79,7 @@ class Market:
 
         item = Item(name, price, deadline)
         self._items[name] = item
-        self._session.publish(MARKET_ITEM_ADDED, *item.wamp_pack())
+        self._session.publish(MARKET_ITEM_ADDED, **item.wamp_pack())
         return True
 
     def _on_bid(self, item_name, bid, bidder_name):
@@ -92,7 +92,7 @@ class Market:
             return False
 
         if item.bid(bid, bidder_name):
-            self._session.publish(MARKET_ITEM_NEW_PRICE, *item.wamp_pack())
+            self._session.publish(MARKET_ITEM_NEW_PRICE, **item.wamp_pack())
             return True
 
         else:

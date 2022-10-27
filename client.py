@@ -99,7 +99,7 @@ Arguments can be provided (whitespace separated) otherwise they will be queried.
             deadline = float(input("Deadline in minutes: "))
 
         item = Item(name, price, deadline)
-        if await self._session.call(MARKET_ITEM_SELL, *item.wamp_pack()):
+        if await self._session.call(MARKET_ITEM_SELL, **item.wamp_pack()):
             print(f"Item '{item.name}' added.\n")
 
         else:

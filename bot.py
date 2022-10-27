@@ -137,12 +137,12 @@ To make the bot more 'human' like:
         await self._start_bidding(name)
         self._bids.remove(name)
 
-    async def _on_bid(self, name, bid, deadline, winner):
+    async def _on_bid(self, name, price, deadline, winner):
 
         if winner == self._name:
             return
 
-        item = Item(name, bid, deadline, winner)
+        item = Item(name, price, deadline, winner)
         print(
             f"{self._name} is notified of a new bid at ${item.price} on time '{item.name}'"
         )
