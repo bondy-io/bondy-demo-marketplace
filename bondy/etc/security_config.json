@@ -1,6 +1,6 @@
 [ 
     { 
-        "uri" : "market.my", 
+        "uri" : "com.market.demo",
         "description" : "The market realm", 
         "authmethods" : ["anonymous"], 
         "security_enabled" : true, 

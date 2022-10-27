@@ -1,19 +1,19 @@
 import os
 
 BONDY_URL = os.getenv("BONDY_URL", "ws://localhost:18080/ws")
-BONDY_REALM = os.getenv("BONDY_REALM", "market.my")
+BONDY_REALM = os.getenv("BONDY_REALM", "com.market.demo")
 
 # RPCs
-MARKET_BIDDER_ADD = "market.bidder.add"
-MARKET_BIDDER_GONE = "market.bidder.gone"
-MARKET_GET = "market.get"
-MARKET_ITEM_GET = "market.item.get"
-MARKET_ITEM_SELL = "market.item.sell"
-MARKET_ITEM_BID = "market.item.bid"
+MARKET_BIDDER_ADD = "com.market.bidder.add"
+MARKET_BIDDER_GONE = "com.market.bidder.gone"
+MARKET_GET = "com.market.get"
+MARKET_ITEM_GET = "com.market.item.get"
+MARKET_ITEM_SELL = "com.market.item.sell"
+MARKET_ITEM_BID = "com.market.item.bid"
 
 # PubSubs
-MARKET_ITEM_ADDED = "market.item.added"
-MARKET_ITEM_NEW_PRICE = "market.item.new_price"
+MARKET_ITEM_ADDED = "com.market.item.added"
+MARKET_ITEM_NEW_PRICE = "com.market.item.new_price"
 
 AUTH_METHOD = os.getenv("AUTH_METHOD", "anonymous")
 
