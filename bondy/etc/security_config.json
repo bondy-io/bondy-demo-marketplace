@@ -1,72 +1,84 @@
-[ 
-    { 
-        "uri" : "com.market.demo",
-        "description" : "The market realm", 
-        "authmethods" : ["anonymous"], 
-        "security_enabled" : true, 
-        "users" : [],
-        "sources" : [ 
-            { 
-                "usernames" : ["anonymous"], 
-                "authmethod" : "anonymous", 
-                "cidr" : "0.0.0.0/0", 
-                "meta" : { 
-                    "description" : "Allows all users from any network authenticate as anonymous." 
+[
+    {
+        "uri": "com.market.demo",
+        "description": "The market realm",
+        "authmethods": [
+            "anonymous"
+        ],
+        "security_enabled": true,
+        "users": [],
+        "groups": [],
+        "grants": [
+            {
+                "permissions": [
+                    "wamp.register",
+                    "wamp.unregister",
+                    "wamp.subscribe",
+                    "wamp.unsubscribe",
+                    "wamp.call",
+                    "wamp.cancel",
+                    "wamp.publish"
+                ],
+                "uri": "*",
+                "roles": [
+                    "anonymous"
+                ]
+            }
+        ],
+        "sources": [
+            {
+                "usernames": [
+                    "anonymous"
+                ],
+                "authmethod": "anonymous",
+                "cidr": "0.0.0.0/0",
+                "meta": {
+                    "description": "Allows all users from any network authenticate as anonymous."
                 }
-            } 
-        ], 
-        "grants" : [
-            { 
-                "permissions" : [ 
-                    "wamp.register", 
-                    "wamp.unregister", 
-                    "wamp.subscribe", 
-                    "wamp.unsubscribe", 
-                    "wamp.call", 
-                    "wamp.cancel", 
-                    "wamp.publish" 
-                ], 
-                "uri" : "*", 
-                "roles" : ["anonymous"] 
-            } 
-        ] 
+            }
+        ]
     },
     {
-        "uri" : "com.leapsight.bondy",
-        "authmethods" : ["wampcra", "ticket", "anonymous"],
-        "security_enabled" : true,
-        "users" : [
+        "uri": "com.leapsight.bondy",
+        "authmethods": [
+            "wampcra",
+            "ticket",
+            "anonymous"
         ],
-        "groups" : [
+        "security_enabled": true,
+        "users": [],
+        "groups": [
             {
-                "name" : "administrators",
-                "groups" : [],
-                "meta" : {
+                "name": "administrators",
+                "groups": [],
+                "meta": {
                     "description": "The administrators of Bondy."
                 }
             }
         ],
-        "sources" : [
+        "sources": [
             {
-                "usernames" : "all",
-                "authmethod" : "password",
-                "cidr" : "0.0.0.0/0",
-                "meta" : {
-                "description" : "Allows all users from any network authenticate using password credentials."
+                "usernames": "all",
+                "authmethod": "password",
+                "cidr": "0.0.0.0/0",
+                "meta": {
+                    "description": "Allows all users from any network authenticate using password credentials."
                 }
             },
             {
-                "usernames" : ["anonymous"],
-                "authmethod" : "trust",
-                "cidr" : "0.0.0.0/0",
-                "meta" : {
-                "description" : "Allows all users from any network authenticate as anonymous."
+                "usernames": [
+                    "anonymous"
+                ],
+                "authmethod": "trust",
+                "cidr": "0.0.0.0/0",
+                "meta": {
+                    "description": "Allows all users from any network authenticate as anonymous."
                 }
             }
         ],
-        "grants" : [
+        "grants": [
             {
-                "permissions" : [
+                "permissions": [
                     "wamp.register",
                     "wamp.unregister",
                     "wamp.subscribe",
@@ -75,11 +87,11 @@
                     "wamp.cancel",
                     "wamp.publish"
                 ],
-                "uri" : "*",
-                "roles" : "all"
+                "uri": "*",
+                "roles": "all"
             },
             {
-                "permissions" : [
+                "permissions": [
                     "wamp.register",
                     "wamp.unregister",
                     "wamp.subscribe",
@@ -88,8 +100,10 @@
                     "wamp.cancel",
                     "wamp.publish"
                 ],
-                "uri" : "*",
-                "roles" : ["anonymous"]
+                "uri": "*",
+                "roles": [
+                    "anonymous"
+                ]
             }
         ]
     }
