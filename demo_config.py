@@ -4,7 +4,7 @@ BONDY_URL = os.getenv("BONDY_URL", "ws://localhost:18080/ws")
 BONDY_REALM = os.getenv("BONDY_REALM", "com.market.demo")
 
 # RPCs
-MARKET_BIDDER_ADD = "com.market.bidder.added"
+MARKET_BIDDER_ADD = "com.market.bidder.add"
 MARKET_BIDDER_GONE = "com.market.bidder.gone"
 MARKET_GET = "com.market.get"
 MARKET_ITEM_GET = "com.market.item.get"

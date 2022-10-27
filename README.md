@@ -1,14 +1,15 @@
 # Bondy Demo
 
-Simple example for using [Bondy](http://docs.getbondy.io)
+Simple example demonstrating the use of routed Remote Procedure Calls (RPC) and Publish/Subscribe using [Bondy](http://docs.getbondy.io).
 
-The demo implement a simple market maker using [Bondy](http://docs.getbondy.io) as platform.
+The demo implements a simple market maker using [Bondy](http://docs.getbondy.io) as platform.
 
 ![](./assets/diagram.png)
 
 ## Prerequisites
 
-* python 3.7+
+* `make`
+* Python 3.7+
 * Docker
 
 ## Demo
