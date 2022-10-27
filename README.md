@@ -14,17 +14,6 @@ The demo implements a simple market maker as depicted in the following diagram.
 * CLI: A command line interface written in Python and using Autobahn Python WAMP client.
 * Bot: A microservice that allow the creation of named bots (via its CLI). Bots will automatically bid for items.
 * Market: A microservice implementing a simple market maker.
-    * The market registers the following RPC Procedures:
-        * `com.market.get`
-        * `com.market.bidder.add`
-        * `com.market.bidder.gone`
-        * `com.market.bidder.item.add`
-        * `com.market.bidder.item.get`
-        * `com.market.bidder.item.sell`
-        * `com.market.bidder.item.bid`
-    * The market published events under the following topics:
-        * `com.market.item.added`
-        * `com.market.item.new_price`
 
 See further descriptions of each actor in the sections below.
 
