@@ -23,7 +23,7 @@ class Bot:
         self._limit = round(float(limit) - self._incr, 2)
         self._lag = int(lag)
 
-        ab_component_config = create_autobahn_component_config()
+        ab_component_config = create_autobahn_component_config(user_id="bot")
         self._component = Component(**ab_component_config)
         self._component.on("join", self._on_join)
 

@@ -17,7 +17,15 @@ MARKET_ITEM_ADDED = "com.market.item.added"
 MARKET_ITEM_NEW_PRICE = "com.market.item.new_price"
 
 # Authentication
+BOT_PRIVKEY = os.getenv("BOT_PRIVKEY") or die("Missing env BOT_PRIVKEY")
 MARKET_PRIVKEY = os.getenv("MARKET_PRIVKEY") or die("Missing env MARKET_PRIVKEY")
+
+AUTH_BOT = {
+    "cryptosign": {
+        "authid": "bot",
+        "privkey": BOT_PRIVKEY,
+    }
+}
 
 AUTH_MARKET = {
     "cryptosign": {
@@ -35,6 +43,7 @@ def create_transport_config(url=BONDY_URL):
 def create_auth_config(user_id=None):
 
     user_configs = {
+        "bot": AUTH_BOT,
         "market": AUTH_MARKET,
     }
 

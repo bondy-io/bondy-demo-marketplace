@@ -16,9 +16,34 @@
                 "groups": [
                     "urn:group:market"
                 ]
+            },
+            {
+                "username": "bot",
+                "authorized_keys": [
+                    "${BOT_PUBKEY}"
+                ],
+                "groups": [
+                    "urn:group:bot"
+                ]
             }
         ],
         "groups": [
+            {
+                "name": "urn:group:bidder",
+                "groups": [],
+                "meta": {
+                    "description": "Group for clients that can bid on the market"
+                }
+            },
+            {
+                "name": "urn:group:bot",
+                "groups": [
+                    "urn:group:bidder"
+                ],
+                "meta": {
+                    "description": "Group for the bot clients that make automated bids."
+                }
+            },
             {
                 "name": "urn:group:market",
                 "groups": [],
@@ -28,6 +53,41 @@
             }
         ],
         "grants": [
+            {
+                "permissions": [
+                    "wamp.call",
+                    "wamp.subscribe"
+                ],
+                "resources": [
+                    {
+                        "uri": "com.market.bidder.",
+                        "match": "prefix"
+                    },
+                    {
+                        "uri": "com.market.get",
+                        "match": "exact"
+                    },
+                    {
+                        "uri": "com.market.item.added",
+                        "match": "exact"
+                    },
+                    {
+                        "uri": "com.market.item.bid",
+                        "match": "exact"
+                    },
+                    {
+                        "uri": "com.market.item.new_price",
+                        "match": "exact"
+                    },
+                    {
+                        "uri": "com.market.item.get",
+                        "match": "exact"
+                    }
+                ],
+                "roles": [
+                    "urn:group:bidder"
+                ]
+            },
             {
                 "permissions": [
                     "wamp.register",
