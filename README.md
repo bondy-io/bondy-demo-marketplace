@@ -4,12 +4,15 @@ Simple example for using [Bondy](http://docs.getbondy.io)
 
 The demo implement a simple market maker using [Bondy](http://docs.getbondy.io) as platform.
 
+![](./assets/diagram.png)
+
 ## Prerequisites
 
 * python 3.7+
 * Docker
 
 ## Demo
+
 
 ### Setup
 
