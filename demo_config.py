@@ -1,4 +1,5 @@
 import os
+from sys import exit as die
 
 BONDY_URL = os.getenv("BONDY_URL", "ws://localhost:18080/ws")
 BONDY_REALM = os.getenv("BONDY_REALM", "com.market.demo")
@@ -15,7 +16,15 @@ MARKET_ITEM_BID = "com.market.item.bid"
 MARKET_ITEM_ADDED = "com.market.item.added"
 MARKET_ITEM_NEW_PRICE = "com.market.item.new_price"
 
-AUTH_METHOD = os.getenv("AUTH_METHOD", "anonymous")
+# Authentication
+MARKET_PRIVKEY = os.getenv("MARKET_PRIVKEY") or die("Missing env MARKET_PRIVKEY")
+
+AUTH_MARKET = {
+    "cryptosign": {
+        "authid": "market",
+        "privkey": MARKET_PRIVKEY,
+    }
+}
 
 
 def create_transport_config(url=BONDY_URL):
@@ -23,19 +32,20 @@ def create_transport_config(url=BONDY_URL):
     return {"type": "websocket", "url": url, "serializers": ["json"]}
 
 
-def create_auth_config(method=AUTH_METHOD):
+def create_auth_config(user_id=None):
 
-    AUTH_CONFIG = {"anonymous": None}
+    user_configs = {
+        "market": AUTH_MARKET,
+    }
 
-    return AUTH_CONFIG[method]
+    # Connect anonymously by default
+    return user_configs.get(user_id, None)
 
 
-def create_autobahn_component_config(
-    url=BONDY_URL, auth_method=AUTH_METHOD, realm=BONDY_REALM
-):
+def create_autobahn_component_config(url=BONDY_URL, user_id=None, realm=BONDY_REALM):
 
     return {
         "transports": [create_transport_config(url)],
-        "authentication": create_auth_config(auth_method),
+        "authentication": create_auth_config(user_id),
         "realm": realm,
     }

@@ -4,3 +4,4 @@ venv/
 
 # Bondy
 bondy/etc/generated/
+bondy/etc/security_config.json

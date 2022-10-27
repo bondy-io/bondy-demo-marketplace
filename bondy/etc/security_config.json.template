@@ -3,12 +3,47 @@
         "uri": "com.market.demo",
         "description": "The market realm",
         "authmethods": [
+            "cryptosign",
             "anonymous"
         ],
         "security_enabled": true,
-        "users": [],
-        "groups": [],
+        "users": [
+            {
+                "username": "market",
+                "authorized_keys": [
+                    "${MARKET_PUBKEY}"
+                ],
+                "groups": [
+                    "urn:group:market"
+                ]
+            }
+        ],
+        "groups": [
+            {
+                "name": "urn:group:market",
+                "groups": [],
+                "meta": {
+                    "description": "Group for the market client that handles sales and bids."
+                }
+            }
+        ],
         "grants": [
+            {
+                "permissions": [
+                    "wamp.register",
+                    "wamp.unregister",
+                    "wamp.publish"
+                ],
+                "resources": [
+                    {
+                        "uri": "com.market.",
+                        "match": "prefix"
+                    }
+                ],
+                "roles": [
+                    "urn:group:market"
+                ]
+            },
             {
                 "permissions": [
                     "wamp.register",
@@ -26,6 +61,14 @@
             }
         ],
         "sources": [
+            {
+                "usernames": "all",
+                "authmethod": "cryptosign",
+                "cidr": "0.0.0.0/0",
+                "meta": {
+                    "description": "Allows all users to authenticate using 'cryptosign' authentication method."
+                }
+            },
             {
                 "usernames": [
                     "anonymous"

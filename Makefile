@@ -1,3 +1,6 @@
+include .env
+export
+
 .PHONY: all
 all: bondy_docker market
 
@@ -7,6 +10,7 @@ bondy_docker:
 	|| docker run \
 		-e BONDY_ERL_NODENAME=bondy1@127.0.0.1 \
 		-e BONDY_ERL_DISTRIBUTED_COOKIE=bondy \
+		--env-file .env \
 		-p 18080:18080 \
 		-p 18081:18081 \
 		-p 18082:18082 \
