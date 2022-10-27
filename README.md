@@ -44,7 +44,7 @@ This will run Bondy on docker (if necessary) then start the marketplace.
 2022-10-24T12:33:14 connecting once using transport type "websocket" over endpoint "tcp"
 ```
 
-### Interactive client
+## Interactive client
 
 A client is available to interact with the market.
 ``` bash
@@ -63,7 +63,7 @@ On exit it calls `com.market.bidder.gone` to dereference itself as a bidder.
 
 Once you are familiar with the marketplace, listing, selling and bidding on items, you can try and compete against a bot.
 
-### Bot
+## Bot
 
 A bot has a name (`BOT_NAME` variable, default: _Bob_) and is configured to:
 * buy any item cheaper than a given price (`BOT_LIMIT` variable, default: $10).
@@ -152,5 +152,5 @@ Make sure `epmd` is running:
 `epmd -daemon` does not work
 
 ### docker: Error response from daemon: Conflict.
-There is already a container with this name running in Docker.
+There is already a container with `bondy-demo` name running in Docker.
 As the message says, remove the duplicate and start over.
