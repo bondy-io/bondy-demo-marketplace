@@ -16,6 +16,10 @@ bondy_docker:
 		-v "${PWD}/bondy/etc:/bondy/etc" \
 		-d leapsight/bondy:1.0.0-beta.64
 
+.PHONY: shutdown
+shutdown:
+	docker rm -fv bondy-demo
+
 VENV?=venv-market
 
 .PHONY: market
