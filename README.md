@@ -15,17 +15,18 @@ The demo implements a simple market maker as depicted in the following diagram.
 * Bot: A microservice that allow the creation of named bots (via its CLI). Bots will automatically bid for items. The bot subscribes to `com.market.bi`
 * Market: A microservice implementing a simple market maker.
     * The market registers the following RPC Procedures:
-        * `com.market.get`: TBD
-        * `com.market.bidder.add`: TBD
-        * `com.market.bidder.gone`: TBD
-        * `com.market.bidder.item.add`: TBD
-        * `com.market.bidder.item.get`: TBD
-        * `com.market.bidder.item.sell`: TBD
-        * `com.market.bidder.item.bid`: TBD
+        * `com.market.get`
+        * `com.market.bidder.add`
+        * `com.market.bidder.gone`
+        * `com.market.bidder.item.add`
+        * `com.market.bidder.item.get`
+        * `com.market.bidder.item.sell`
+        * `com.market.bidder.item.bid`
     * The market published events under the following topics:
-        * `com.market.item.added`: When an item has been added
-        * `com.market.item.new_price`: When aa bid has been accepted by the market
+        * `com.market.item.added`
+        * `com.market.item.new_price`
 
+See further descriptions of each actor in the sections below.
 
 
 ## Running the Demo
@@ -64,12 +65,12 @@ A client is available to interact with the market.
 It will first print the help and prompt you to enter a command.
 
 A client can only call RPCs on the market:
-* `market.get`: To get all the listed items.
-* `market.item.bid`: To bid on a listed item.
-* `market.item.sell` To put a new item on the market place.
+* `com.market.get`: To get all the listed items.
+* `com.market.item.bid`: To bid on a listed item.
+* `com.market.item.sell` To put a new item on the market place.
 
-Under the hood it will call `market.bidder.add` to identify itself as a bidder.
-On exit it calls `market.bidder.gone` to dereference itself as a bidder.
+Under the hood it will call `com.market.bidder.add` to identify itself as a bidder.
+On exit it calls `com.market.bidder.gone` to dereference itself as a bidder.
 
 Once you are familiar with the marketplace, listing, selling and bidding on items, you can try and compete against a bot.
 
@@ -88,14 +89,14 @@ A bot has a name (`BOT_NAME` variable, default: _Bob_) and is configured to:
 **Note:** A bot gives up on an item after 3 consecutive bidding failures.
 
 A bot subscribes to 2 topics:
-* `market.item.added`: To know when a new item is on offer.
-* `market.item.new_price`: To know when there is a new accepted bid.
+* `com.market.item.added`: To know when a new item is on offer.
+* `com.market.item.new_price`: To know when there is a new accepted bid.
 
 Similarly to the client, it calls some RPCs to try and win some items:
-* `market.bidder.add` to identify itself as a bidder.
-* `market.get`: To get all the listed items when it joins the marketplace.
-* `market.item.bid`: To bid on a listed item.
-* `market.item.get`: To get the details of a specific item for optimum bid.
+* `com.market.bidder.add` to identify itself as a bidder.
+* `com.market.get`: To get all the listed items when it joins the marketplace.
+* `com.market.item.bid`: To bid on a listed item.
+* `com.market.item.get`: To get the details of a specific item for optimum bid.
 
 Once you are familiar with the log printed by the bot, you can try and have several of them competing against each other.
 
@@ -115,16 +116,16 @@ Run the marketplace from the `make` target: `market`
 
 This will create the python virtual environment with all the dependencies required to run the script.
 The script then connects to Bondy and register the following URIs:
-* `market.bidder.add`: When a new bigger joins, it has to give a name to be able to bid.
-* `market.bidder.gone`: When a client gently leave the market, i.e. no errors or interuptions.
-* `market.get`: To get all the listed items.
-* `market.item.bid`: To bid on a listed item.
-* `market.item.get`: To get the details of a specific item.
-* `market.item.sell` To put a new item on the market place.
+* `com.market.bidder.add`: When a new bigger joins, it has to give a name to be able to bid.
+* `com.market.bidder.gone`: When a client gently leave the market, i.e. no errors or interuptions.
+* `com.market.get`: To get all the listed items.
+* `com.market.item.bid`: To bid on a listed item.
+* `com.market.item.get`: To get the details of a specific item.
+* `com.market.item.sell` To put a new item on the market place.
 
 The market publishes the following topics:
-* `market.item.added`: When a new item is on offer.
-* `market.item.new_price`: When a bid was accepted.
+* `com.market.item.added`: When a new item is on offer.
+* `com.market.item.new_price`: When a bid was accepted.
 
 ## Troubleshooting
 
