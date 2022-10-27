@@ -12,7 +12,7 @@ The demo implements a simple market maker as depicted in the following diagram.
 * User: A human using either the CLI or the Web App.
 * Web App: A single page application written written in Typescript using VueJS and Autobahn JS (Browser).
 * CLI: A command line interface written in Python and using Autobahn Python WAMP client.
-* Bot: A microservice that allow the creation of named bots (via its CLI). Bots will automatically bid for items. The bot subscribes to `com.market.bi`
+* Bot: A microservice that allow the creation of named bots (via its CLI). Bots will automatically bid for items.
 * Market: A microservice implementing a simple market maker.
     * The market registers the following RPC Procedures:
         * `com.market.get`
