@@ -26,14 +26,15 @@ The demo implements a simple market maker as depicted in the following diagram.
         * `com.market.item.added`: When an item has been added
         * `com.market.item.new_price`: When aa bid has been accepted by the market
 
-## Prerequisites
 
-* `make`
+
+## Running the Demo
+
+### Prerequisites
+
+* `make` (normally present in macOS, Linux and Windows)
 * Python 3.7+
-* Docker
-
-## Demo
-
+* [Docker](https://www.docker.com) (Docker Desktop in case you use macOS or Windows)
 
 ### Setup
 
