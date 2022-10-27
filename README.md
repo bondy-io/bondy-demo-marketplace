@@ -1,10 +1,30 @@
 # Bondy Demo
 
-Simple example demonstrating the use of routed Remote Procedure Calls (RPC) and Publish/Subscribe using [Bondy](http://docs.getbondy.io).
+Simple example demonstrating the use of routed Remote Procedure Calls (RPC) and Publish/Subscribe using [Bondy](http://www.bondy.io).
 
-The demo implements a simple market maker using [Bondy](http://docs.getbondy.io) as platform.
+## Architecture
+The demo implements a simple market maker as depicted in the following diagram.
 
 ![](./assets/diagram.png)
+
+### Actors
+
+* User: A human using either the CLI or the Web App.
+* Web App: A single page application written written in Typescript using VueJS and Autobahn JS (Browser).
+* CLI: A command line interface written in Python and using Autobahn Python WAMP client.
+* Bot: A microservice that allow the creation of named bots (via its CLI). Bots will automatically bid for items. The bot subscribes to `com.market.bi`
+* Market: A microservice implementing a simple market maker.
+    * The market registers the following RPC Procedures:
+        * `com.market.get`: TBD
+        * `com.market.bidder.add`: TBD
+        * `com.market.bidder.gone`: TBD
+        * `com.market.bidder.item.add`: TBD
+        * `com.market.bidder.item.get`: TBD
+        * `com.market.bidder.item.sell`: TBD
+        * `com.market.bidder.item.bid`: TBD
+    * The market published events under the following topics:
+        * `com.market.item.added`: When an item has been added
+        * `com.market.item.new_price`: When aa bid has been accepted by the market
 
 ## Prerequisites
 
