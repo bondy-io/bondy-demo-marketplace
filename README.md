@@ -33,7 +33,7 @@ The demo environment is started by the default make target.
 % make
 ```
 
-This will run Bondy on docker (if necessary) then start the marketplace.
+This will run Bondy and the Web App on docker (if necessary), then start the marketplace.
 
 **Note:** Bondy takes a few seconds to start, initialize and be ready to accept connections. You should see the market script trying to reconnect until Bondy is ready. Typically, a series of logs similar to:
 ```
@@ -43,6 +43,7 @@ This will run Bondy on docker (if necessary) then start the marketplace.
 2022-10-24T12:33:12 trying transport 0 ("ws://localhost:18080/ws") using connect delay 2.198465193966359
 2022-10-24T12:33:14 connecting once using transport type "websocket" over endpoint "tcp"
 ```
+
 
 ## Interactive client
 

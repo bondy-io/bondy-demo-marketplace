@@ -2,12 +2,13 @@ include .env
 export
 
 .PHONY: all
-all: bondy_docker market
+all: bondy_docker webapp_docker market
 
 .PHONY: bondy_docker
 bondy_docker:
-	docker ps | grep bondy-demo > /dev/null \
-	|| docker run \
+	docker stop bondy-demo || true
+	docker rm -fv bondy-demo || true
+	docker run \
 		-e BONDY_ERL_NODENAME=bondy1@127.0.0.1 \
 		-e BONDY_ERL_DISTRIBUTED_COOKIE=bondy \
 		--env-file .env \
@@ -20,9 +21,17 @@ bondy_docker:
 		-v "${PWD}/bondy/etc:/bondy/etc" \
 		-d leapsight/bondy:1.0.0-beta.64
 
+.PHONY: webapp_docker
+webapp_docker:
+	docker stop bondy-marketplace-webapp || true
+	docker rm -fv bondy-marketplace-webapp || true
+	docker build --load -t bondy-marketplace-webapp ./webapp
+	docker run -it -p 8080:80 --rm --name bondy-marketplace-webapp bondy-marketplace-webapp
+
 .PHONY: shutdown
 shutdown:
 	docker rm -fv bondy-demo
+	docker rm -fv bondy-marketplace-webapp
 
 VENV?=venv-market
 
