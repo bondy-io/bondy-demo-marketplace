@@ -21,7 +21,7 @@ class Bot:
         self._name = name
         self._incr = round(float(incr), 2)
         self._limit = round(float(limit) - self._incr, 2)
-        self._lag = int(lag)
+        self._lag = round(float(lag), 2)
 
         ab_component_config = create_autobahn_component_config(user_id="bot")
         self._component = Component(**ab_component_config)

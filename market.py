@@ -48,6 +48,7 @@ class Market:
             return False
 
         else:
+            print(f"New bidder: {name}")
             self._bidders.add(name)
             return True
 
@@ -79,6 +80,7 @@ class Market:
 
         item = Item(name, price, deadline)
         self._items[name] = item
+        print(f"New item starting at ${item.price} until {item.deadline_as_HMS()}.")
         self._session.publish(MARKET_ITEM_ADDED, **item.wamp_pack())
         return True
 
@@ -92,10 +94,12 @@ class Market:
             return False
 
         if item.bid(bid, bidder_name):
+            print(f"Bid: '{item.name}' at ${item.price} from {bidder_name} ACCEPTED")
             self._session.publish(MARKET_ITEM_NEW_PRICE, **item.wamp_pack())
             return True
 
         else:
+            print(f"Bid: '{item.name}' at ${item.price} from {bidder_name} REJECTED")
             return False
 
 

@@ -76,7 +76,7 @@ Arguments can be provided (whitespace separated) otherwise they will be queried.
         len_price = max(map(len, prices_str), default=len("Price"))
         len_price = max(len_price, len("Price"))
 
-        deadlines = map(lambda i: f"{i.deadline.astimezone():%H:%M:%S}", items)
+        deadlines = map(lambda i: i.deadline_as_HMS(), items)
         winners = map(lambda i: i.winner if i.winner else "-", items)
 
         line = f"{{0:{len_name}}}    {{1:>{len_price}}}    {{2}}    {{3}}"
@@ -126,6 +126,23 @@ Arguments can be provided (whitespace separated) otherwise they will be queried.
         print(f"\nWelcome to '{session.realm}' marketplace")
         await self._identify()
         await self._print_help()
+
+        try:
+            await self._prompt_user()
+
+        except:
+            pass
+
+        print("Bye.")
+        try:
+            await self._session.call(MARKET_BIDDER_GONE, self._name)
+
+        except:
+            pass
+        session.leave()
+
+    async def _prompt_user(self):
+
         action = ""
         args = None
         while action not in ("q", "quit", "e", "exit"):
@@ -152,14 +169,6 @@ Arguments can be provided (whitespace separated) otherwise they will be queried.
 
             user_input = input("> ").strip().split()
             action, *args = user_input if 0 < len(user_input) else ("",)
-
-        print("Bye.")
-        try:
-            await self._session.call(MARKET_BIDDER_GONE, self._name)
-
-        except:
-            pass
-        session.leave()
 
 
 if __name__ == "__main__":

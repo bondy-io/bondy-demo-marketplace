@@ -46,6 +46,14 @@ bot: ${VENV}
 	source venv/${VENV}/bin/activate; \
 		python3 bot.py ${BOT_NAME} ${BOT_INCR} ${BOT_LIMIT} ${BOT_LAG}
 
+.PHONY: many_bots
+many_bots: ${VENV}
+	source venv/${VENV}/bin/activate; \
+		python3 bot.py Alice 3 10000 0.3& \
+		python3 bot.py Tom 5 10000 0.5& \
+		python3 bot.py Mary 7 10000 0.7& \
+		python3 bot.py Victor 11 10000 1.1&
+
 PIP_REQS_FILE:=pip_reqs.txt
 
 .PHONY: ${VENV}

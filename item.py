@@ -40,6 +40,10 @@ class Item:
 
         return now_utc() < self.deadline
 
+    def deadline_as_HMS(self):
+
+        return self.deadline.astimezone().strftime("%H:%M:%S")
+
     ############################################################################
     # For WAMP messages
 
