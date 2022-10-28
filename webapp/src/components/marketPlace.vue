@@ -9,6 +9,12 @@
     <v-alert type="success" v-model="alertSuccess" dismissible elevation="2">
       {{ showSuccessMsg }}
     </v-alert>
+    <div align="right">
+      <v-chip class="ma-2" color="blue" label outlined pilled>
+        <v-icon dark @click="signup({})"> mdi-account-circle-outline </v-icon>
+        &nbsp;{{ bidderName }}
+      </v-chip>
+    </div>
     <v-data-table
       :headers="headers"
       :items="items"
@@ -19,7 +25,7 @@
       :search="search"
     >
       <template v-slot:[`item.winner`]="{ item }">
-        <v-chip :color="getColor(item.winner)">
+        <v-chip :color="getColorWinner(item.winner)">
           <v-icon left> mdi-account-circle-outline </v-icon>
           {{ item.winner }}
         </v-chip>
@@ -46,28 +52,49 @@
             </template>
             <v-card>
               <v-card-title>
-                <span class="text-h5">Item to Sell</span>
+                <span class="text-h5"
+                  >Please, fill the data for the item to sell</span
+                >
               </v-card-title>
 
               <v-card-text>
                 <v-container>
                   <v-row>
-                    <v-col cols="12" sm="6" md="4">
+                    <v-col cols="12" sm="6" md="8">
                       <v-text-field
                         v-model="editedItem.name"
                         label="Name"
+                        counter="25"
+                        maxlength="25"
+                        :rules="[
+                          () =>
+                            !!editedItem.name || 'The item name is required',
+                        ]"
                       ></v-text-field>
                     </v-col>
                     <v-col cols="12" sm="6" md="4">
                       <v-text-field
                         v-model="editedItem.price"
                         label="Price"
+                        prefix="$"
+                        type="number"
+                        :rules="[
+                          () =>
+                            !!editedItem.price || 'The item price is required',
+                        ]"
                       ></v-text-field>
                     </v-col>
                     <v-col cols="16" sm="6" md="4">
                       <v-text-field
                         v-model="editedItem.deadline"
                         label="Deadline"
+                        suffix="minutes"
+                        type="number"
+                        :rules="[
+                          () =>
+                            !!editedItem.deadline ||
+                            'The item deadline is required',
+                        ]"
                       ></v-text-field>
                     </v-col>
                   </v-row>
@@ -86,28 +113,30 @@
           <v-dialog v-model="dialogBid" max-width="500px">
             <v-card>
               <v-card-title class="text-h5"
-                >Please, enter your name and the price</v-card-title
+                >Please, enter the new price for&nbsp;
+                <span class="text-h5" style="color: orange">{{
+                  editedItem.name
+                }}</span></v-card-title
               >
               <v-card-text>
                 <v-container>
                   <v-row>
-                    <v-col cols="12" sm="6" md="4">
+                    <v-col cols="12" sm="6" md="7">
                       <v-text-field
-                        v-model="editedItem.name"
-                        label="Name"
+                        v-model="editedItem.price"
+                        label="Highest Price"
                         readonly
                       ></v-text-field>
                     </v-col>
                     <v-col cols="12" sm="6" md="4">
                       <v-text-field
-                        v-model="bidderName"
-                        label="Bidder"
-                      ></v-text-field>
-                    </v-col>
-                    <v-col cols="12" sm="6" md="4">
-                      <v-text-field
-                        v-model="editedItem.price"
+                        v-model="editedItem.new_price"
                         label="Price"
+                        prefix="$"
+                        type="number"
+                        :rules="[
+                          () => !!editedItem.price || 'The price is required',
+                        ]"
                       ></v-text-field>
                     </v-col>
                   </v-row>
@@ -125,6 +154,30 @@
               </v-card-actions>
             </v-card>
           </v-dialog>
+          <v-dialog v-model="dialogSignUp" max-width="210px">
+            <v-card>
+              <v-card-text>
+                <v-text-field
+                  v-model="bidderName"
+                  label="Your Name"
+                  counter="20"
+                  maxlength="20"
+                  :rules="[
+                    () => !!bidderName || 'The bidder name is required',
+                  ]"
+                ></v-text-field>
+              </v-card-text>
+              <v-card-actions>
+                <v-btn color="blue darken-1" text @click="closeSignUp"
+                  >Cancel</v-btn
+                >
+                <v-btn color="blue darken-1" text @click="signUpConfirm"
+                  >Sign Up</v-btn
+                >
+                <v-spacer></v-spacer>
+              </v-card-actions>
+            </v-card>
+          </v-dialog>
         </v-toolbar>
       </template>
       <template v-slot:[`item.actions`]="{ item }">
@@ -137,12 +190,13 @@
   </v-card>
 </template>
 <script>
-import { MarketHelper } from '@/helpers/mainExports.js'
+import { MarketHelper } from "@/helpers/mainExports.js";
 
 export default {
   data: () => ({
     dialog: false,
     dialogBid: false,
+    dialogSignUp: false,
     alertError: false,
     errorMsg: "",
     alertInfo: false,
@@ -152,32 +206,35 @@ export default {
     search: "",
     headers: [
       { text: "Item", align: "start", value: "name" },
-      { text: "Price", value: "price" },
+      { text: "Highest Price", value: "price" },
       { text: "Deadline", value: "deadline" },
       { text: "Winner", value: "winner" },
       { text: "Bid", value: "actions", sortable: false },
     ],
     items: [],
     editedIndex: -1,
-    bidderName: "your name",
+    bidderName: null,
     editedItem: {
       name: "",
       price: null,
       deadline: null,
       winner: "",
+      new_price: null,
     },
     defaultItem: {
       name: "",
       price: null,
       deadline: null,
       winner: "",
+      new_price: null,
     },
     loading: false,
     // autobahn
     url: "ws://localhost:18081/ws",
     realm: "com.market.demo",
     username: "webapp",
-    publicKey: "1766c9e6ec7d7b354fd7a2e4542753a23cae0b901228305621e5b8713299ccdd",
+    publicKey:
+      "1766c9e6ec7d7b354fd7a2e4542753a23cae0b901228305621e5b8713299ccdd",
     // autobahn connection
     connection: null,
     // established session
@@ -209,6 +266,9 @@ export default {
     dialogBid(val) {
       val || this.closeBid();
     },
+    dialogSignUp(val) {
+      val || this.closeSignUp();
+    },
     alertInfo(new_val) {
       if (new_val) {
         setTimeout(() => {
@@ -220,6 +280,13 @@ export default {
       if (new_val) {
         setTimeout(() => {
           this.alertSuccess = false;
+        }, 6000);
+      }
+    },
+    alertError(new_val) {
+      if (new_val) {
+        setTimeout(() => {
+          this.alertError = false;
         }, 8000);
       }
     },
@@ -246,21 +313,35 @@ export default {
 
   methods: {
     inititialize(url, realm, itemAddedTopic, itemPriceChangedTopic) {
-      
       // const connection = MarketHelper.getAnonymousConnection(url, realm);
-      const connection = MarketHelper.getCryptosignConnection(url, realm, this.username, this.publicKey);
+      const connection = MarketHelper.getCryptosignConnection(
+        url,
+        realm,
+        this.username,
+        this.publicKey
+      );
 
       // component reference to be able to access data and methods
       const self = this;
 
       connection.onopen = function (session, details) {
-        console.log(`Connected: ${JSON.stringify(details, undefined, 2)}`);
+        console.log(`Connected : ${JSON.stringify(details, undefined, 2)}`);
         console.log("-----------------------");
 
         self.session = session;
 
         // retrieve and load the market items
-        self.getItems(session, self);
+        MarketHelper.getMarket(
+          session,
+          function (items) {
+            self.items = items;
+            self.loading = false;
+          },
+          function (error) {
+            self.setError(error);
+            self.loading = false;
+          }
+        );
 
         // subscriptions
         MarketHelper.subscribe(session, [
@@ -285,22 +366,14 @@ export default {
       return connection;
     },
 
-    getItems(session, self) {
-      MarketHelper.getMarket(
-        session,
-        function (items) {
-          self.items = items;
-          self.loading = false;
-        },
-        function (error) {
-          self.setError(error);
-          self.loading = false;
-        }
-      );
+    signup() {
+      if (this.bidderName == null) {
+        this.dialogSignUp = true;
+      }
     },
 
-    getColor(winner) {
-      if (!winner) return "dark";
+    getColorWinner(winner) {
+      if (!winner) return "black";
       if (winner == "Bob") return "green";
       else return "blue";
     },
@@ -354,9 +427,13 @@ export default {
     },
 
     bidItem(item) {
-      this.editedIndex = this.items.indexOf(item);
-      this.editedItem = Object.assign({}, item);
-      this.dialogBid = true;
+      if (this.bidderName != null) {
+        this.editedIndex = this.items.indexOf(item);
+        this.editedItem = Object.assign({}, item);
+        this.dialogBid = true;
+      } else {
+        this.setError("You must be registered!");
+      }
     },
 
     bidItemConfirm() {
@@ -384,6 +461,30 @@ export default {
         this.editedItem = Object.assign({}, this.defaultItem);
         this.editedIndex = -1;
       });
+    },
+
+    signUpConfirm() {
+      // register a bidder
+      MarketHelper.addBidder(
+        this.session,
+        this.bidderName,
+        this.setSignUpResult,
+        this.setError
+      );
+      this.closeSignUp();
+    },
+
+    setSignUpResult(res) {
+      this.closeSignUp;
+      if (!res) {
+        this.errorMsg = `Unable to register ${this.bidderName}`;
+        this.alertError = true;
+        this.bidderName = null;
+      }
+    },
+
+    closeSignUp() {
+      this.dialogSignUp = false;
     },
 
     setError(error) {

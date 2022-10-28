@@ -19,6 +19,15 @@
       <v-spacer></v-spacer>
 
       <v-btn
+        href="https://www.bondy.io/"
+        target="_blank"
+        text
+      >
+        <span class="mr-2">Bondy</span>
+        <v-icon>mdi-open-in-new</v-icon>
+      </v-btn>
+
+      <v-btn
         href="https://github.com/Leapsight/bondy"
         target="_blank"
         text

@@ -125,6 +125,32 @@ export default {
             );
     },
 
+    addBidder(session, bidderName, setSuccessFun, setErrorFun) {
+        session
+            .call("com.market.bidder.add", [bidderName], {}, { timeout: 5000 })
+            .then(
+                function (res) {
+                    setSuccessFun(res);
+                },
+                function (err) {
+                    setErrorFun(err);
+                }
+            );
+    },
+
+    removeBidder(session, bidderName, setSuccessFun, setErrorFun) {
+        session
+            .call("com.market.bidder.gone", [bidderName], {}, { timeout: 5000 })
+            .then(
+                function (res) {
+                    setSuccessFun(res);
+                },
+                function (err) {
+                    setErrorFun(err);
+                }
+            );
+    },
+
     // - true: Bid accepted, i.e. highest price
     // - false: Bid rejected (not highest, item not on sell anymore…)
     // item:
@@ -138,16 +164,16 @@ export default {
         // console.log(`Item to bid: ${JSON.stringify(item, undefined, 2)}`);
 
         session
-            .call("com.market.item.bid", [item.name, item.price, bidderName], {}, options)
+            .call("com.market.item.bid", [item.name, item.new_price, bidderName], {}, options)
             .then(
                 function (res) {
-                    // console.log("-----------------------");
-                    // console.log(`Response OK: ${res}`);
+                    console.log("-----------------------");
+                    console.log(`Response OK: ${res}`);
                     setSuccessFun(res);
                 },
                 function (err) {
-                    // console.log("-----------------------");
-                    // console.log(`Call has failed with error: ${JSON.stringify(err, undefined, 2)}`);
+                    console.log("-----------------------");
+                    console.log(`Call has failed with error: ${JSON.stringify(err, undefined, 2)}`);
                     setErrorFun(err);
                 }
             );
