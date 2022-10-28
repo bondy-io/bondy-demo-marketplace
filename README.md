@@ -109,33 +109,33 @@ If you sale an item at $1, the bots will compete for quite a while.
 You can hit the deadline by selling an item for 1 minute.
 
 Here from the interactive client, a bike is sold at $1 for a minute:
-``` bash
+```
 % make client
 ...
 > sell bike 1 1
 ```
 
 From the market logs you can see the bots competing, some bids are rejected and in the end Mary wins:
-``` bash
+```
 New item starting at $1.0 until 10:08:23.
 Bid: 'bike' at $4.0 from Alice ACCEPTED
 Bid: 'bike' at $6.0 from Tom ACCEPTED
 Bid: 'bike' at $8.0 from Mary ACCEPTED
 ...
 Bid: 'bike' at $37.0 from Alice ACCEPTED
-Bid: 'bike' at $37.0 from Victor REJECTED
+Bid: 'bike' at $37.0 from Victor REJECTED   <--- Nope
 Bid: 'bike' at $42.0 from Tom ACCEPTED
 ...
 
 Bid: 'bike' at $587.0 from Alice ACCEPTED
-Bid: 'bike' at $588.0 from Mary ACCEPTED    <--- Winner
-Bid: 'bike' at $588.0 from Victor REJECTED
-Bid: 'bike' at $588.0 from Alice REJECTED
-Bid: 'bike' at $588.0 from Tom REJECTED
+Bid: 'bike' at $588.0 from Mary ACCEPTED    <--- Winner!
+Bid: 'bike' at $588.0 from Victor REJECTED  <--- Too late
+Bid: 'bike' at $588.0 from Alice REJECTED   <--- Too late
+Bid: 'bike' at $588.0 from Tom REJECTED     <--- Too late
 ```
 
 This is confirmed when listing the items:
-``` bash
+```
 > list
 Item    Price    Deadline    Winner
 ----    -----    --------    ------
@@ -147,25 +147,25 @@ bike    588.0    10:08:23    Mary
 Similarly by selling an item close to the limit, one of the bot will win before the deadline and the others will give up.
 
 Here from the interactive client, a car is sold at $9950 for 10 minutes:
-``` bash
+```
 % make client
 ...
 > sell car 9950 10
 ```
 
 Very quicky the bids stop:
-``` bash
+```
 ...
 Bid: 'car' at $9993.0 from Tom ACCEPTED
 Bid: 'car' at $9993.0 from Mary REJECTED
 Bid: 'car' at $9996.0 from Victor ACCEPTED
 Bid: 'car' at $9996.0 from Alice REJECTED
 Bid: 'car' at $9999.0 from Alice ACCEPTED
-Bid: 'car' at $10000.0 from Mary ACCEPTED   <--- winner
+Bid: 'car' at $10000.0 from Mary ACCEPTED   <--- winner!
 ```
 
 And Mary won again!
-``` bash
+```
 > list
 Item      Price    Deadline    Winner
 ----    -------    --------    ------
