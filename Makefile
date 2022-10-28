@@ -6,6 +6,7 @@ all: bondy_docker webapp_docker market
 
 .PHONY: bondy_docker
 bondy_docker:
+	@echo "Removing existing bondy-demo container"
 	docker stop bondy-demo || true
 	docker rm -fv bondy-demo || true
 	docker run \
@@ -23,10 +24,14 @@ bondy_docker:
 
 .PHONY: webapp_docker
 webapp_docker:
+	@echo "Removing existing bondy-marketplace-webapp container"
 	docker stop bondy-marketplace-webapp || true
 	docker rm -fv bondy-marketplace-webapp || true
 	docker build --load -t bondy-marketplace-webapp ./webapp
-	docker run -it -p 8080:80 --rm --name bondy-marketplace-webapp bondy-marketplace-webapp
+	docker run \
+		-p 8080:80 \
+		--name bondy-marketplace-webapp \
+		-d bondy-marketplace-webapp
 
 .PHONY: shutdown
 shutdown:
