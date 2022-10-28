@@ -5,3 +5,8 @@ venv/
 # Bondy
 bondy/etc/generated/
 bondy/etc/security_config.json
+
+# webapp
+webapp/.DS_Store
+webapp/node_modules/
+webapp/dist/

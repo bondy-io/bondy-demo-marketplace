@@ -25,6 +25,15 @@
                 "groups": [
                     "urn:group:bot"
                 ]
+            },
+            {
+                "username": "webapp",
+                "authorized_keys": [
+                    "${WEBAPP_PUBKEY}"
+                ],
+                "groups": [
+                    "urn:group:webapp"
+                ]
             }
         ],
         "groups": [
@@ -49,6 +58,13 @@
                 "groups": [],
                 "meta": {
                     "description": "Group for the market client that handles sales and bids."
+                }
+            },
+            {
+                "name": "urn:group:webapp",
+                "groups": [],
+                "meta": {
+                    "description": "Group for the market webapp client that handles sales, bids and receives events."
                 }
             }
         ],
@@ -117,6 +133,21 @@
                 "uri": "*",
                 "roles": [
                     "anonymous"
+                ]
+            },
+            {
+                "permissions": [
+                    "wamp.subscribe",
+                    "wamp.call"
+                ],
+                "resources": [
+                    {
+                        "uri": "com.market.",
+                        "match": "prefix"
+                    }
+                ],
+                "roles": [
+                    "urn:group:webapp"
                 ]
             }
         ],
