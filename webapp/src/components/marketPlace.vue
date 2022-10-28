@@ -1,17 +1,8 @@
 <template>
   <v-card>
-    <v-alert type="error" v-model="alertError" dismissible elevation="2">
-      {{ showErrorMsg }}
-    </v-alert>
-    <v-alert type="info" v-model="alertInfo" dismissible elevation="2">
-      {{ showInfoMsg }}
-    </v-alert>
-    <v-alert type="success" v-model="alertSuccess" dismissible elevation="2">
-      {{ showSuccessMsg }}
-    </v-alert>
     <div align="right">
       <v-chip class="ma-2" color="blue" label outlined pilled>
-        <v-icon dark @click="signup({})"> mdi-account-circle-outline </v-icon>
+        <v-icon dark @click="signup()"> mdi-account-circle-outline </v-icon>
         &nbsp;{{ bidderName }}
       </v-chip>
     </div>
@@ -159,7 +150,7 @@
               <v-card-text>
                 <v-text-field
                   v-model="bidderName"
-                  label="Your Name"
+                  label="Your bidder name"
                   counter="20"
                   maxlength="20"
                   :rules="[
@@ -187,6 +178,15 @@
       </template>
       <template v-slot:no-data> No items to show </template>
     </v-data-table>
+    <v-alert type="error" v-model="alertError" dismissible elevation="2">
+      {{ showErrorMsg }}
+    </v-alert>
+    <v-alert type="info" v-model="alertInfo" dismissible elevation="2">
+      {{ showInfoMsg }}
+    </v-alert>
+    <v-alert type="success" v-model="alertSuccess" dismissible elevation="2">
+      {{ showSuccessMsg }}
+    </v-alert>
   </v-card>
 </template>
 <script>
@@ -208,6 +208,7 @@ export default {
       { text: "Item", align: "start", value: "name" },
       { text: "Highest Price", value: "price" },
       { text: "Deadline", value: "deadline" },
+      { text: "Bidder", value: "winner" },
       { text: "Winner", value: "winner" },
       { text: "Bid", value: "actions", sortable: false },
     ],
@@ -245,6 +246,7 @@ export default {
     // List with the item name and the new price
     // Published at every new successful bid.
     itemPriceChangedTopic: "com.market.item.new_price",
+    itemSoldTopic: "com.market.item.sold",
   }),
 
   computed: {
@@ -300,7 +302,8 @@ export default {
       this.url,
       this.realm,
       this.itemAddedTopic,
-      this.itemPriceChangedTopic
+      this.itemPriceChangedTopic,
+      this.itemSoldTopic
     );
   },
 
@@ -312,7 +315,7 @@ export default {
   },
 
   methods: {
-    inititialize(url, realm, itemAddedTopic, itemPriceChangedTopic) {
+    inititialize(url, realm, itemAddedTopic, itemPriceChangedTopic, itemSoldTopic) {
       // const connection = MarketHelper.getAnonymousConnection(url, realm);
       const connection = MarketHelper.getCryptosignConnection(
         url,
@@ -347,6 +350,7 @@ export default {
         MarketHelper.subscribe(session, [
           [itemAddedTopic, self.onItemAdded],
           [itemPriceChangedTopic, self.onItemChanged],
+          [itemSoldTopic, self.onItemChanged],
         ]);
       };
 
@@ -432,7 +436,7 @@ export default {
         this.editedItem = Object.assign({}, item);
         this.dialogBid = true;
       } else {
-        this.setError("You must be registered!");
+        this.setError("You must be registered to bid an item!");
       }
     },
 

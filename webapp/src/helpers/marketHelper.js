@@ -104,13 +104,10 @@ export default {
     //  - price (float) Asking price
     //  - deadline (integer) Deadline in minutes
     sellItem(session, item, setSuccessFun, setErrorFun) {
-        let options = {
-            timeout: 5000,
-        };
         // console.log(`Item to sell: ${JSON.stringify(item, undefined, 2)}`);
 
         session
-            .call("com.market.item.sell", [item.name, item.price, item.deadline], {}, options)
+            .call("com.market.item.sell", [item.name, item.price, item.deadline], {}, { timeout: 5000 })
             .then(
                 function (res) {
                     // console.log("-----------------------");
@@ -158,13 +155,10 @@ export default {
     //  - price (float) Bid
     //  - bidderName (String) Name of the bidder
     bidItem(session, item, bidderName, setSuccessFun, setErrorFun) {
-        let options = {
-            timeout: 5000,
-        };
-        // console.log(`Item to bid: ${JSON.stringify(item, undefined, 2)}`);
+        // console.log(`Item to bid: ${JSON.stringify(item, undefined, 2)} for ${bidderName}`);
 
         session
-            .call("com.market.item.bid", [item.name, item.new_price, bidderName], {}, options)
+            .call("com.market.item.bid", [item.name, item.new_price, bidderName], {}, { timeout: 5000 })
             .then(
                 function (res) {
                     console.log("-----------------------");
