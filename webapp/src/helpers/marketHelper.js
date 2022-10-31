@@ -50,26 +50,16 @@ export default {
 
     // List of items; an items has a name, a deadline, an asking price and the current highest bid (0: no bids)
     async getMarket(session, setItemsFun, setErrorFun) {
-        // only to emulate timing retrieving maketplate items
+        // only to emulate timing retrieving maketplate items and see the "loading" banner in the table
         await new Promise((r) => setTimeout(r, 2000));
 
-        let options = {
-            timeout: 5000,
-            //retry,disclose_me
-        };
-
         session
-            .call("com.market.get", [], {}, options)
+            .call("com.market.get", [], {}, {timeout: 5000})
             .then(
                 function (res) {
-                    // console.log("-----------------------");
-                    // console.log(`Response OK. Items length: ${res.length}`);
-                    // console.log(JSON.stringify(res, undefined, 2))
                     setItemsFun(res);
                 },
                 function (err) {
-                    // console.log("-----------------------");
-                    // console.log(`Call has failed with error: ${JSON.stringify(err, undefined, 2)}`);
                     setErrorFun(err);
                 }
             );
@@ -104,19 +94,13 @@ export default {
     //  - price (float) Asking price
     //  - deadline (integer) Deadline in minutes
     sellItem(session, item, setSuccessFun, setErrorFun) {
-        // console.log(`Item to sell: ${JSON.stringify(item, undefined, 2)}`);
-
         session
             .call("com.market.item.sell", [item.name, item.price, item.deadline], {}, { timeout: 5000 })
             .then(
                 function (res) {
-                    // console.log("-----------------------");
-                    // console.log(`Response OK: ${res}`);
                     setSuccessFun(res);
                 },
                 function (err) {
-                    // console.log("-----------------------");
-                    // console.log(`Call has failed with error: ${JSON.stringify(err, undefined, 2)}`);
                     setErrorFun(err);
                 }
             );
@@ -153,21 +137,15 @@ export default {
     // item:
     //  - name (string) Name of the item
     //  - price (float) Bid
-    //  - bidderName (String) Name of the bidder
-    bidItem(session, item, bidderName, setSuccessFun, setErrorFun) {
-        // console.log(`Item to bid: ${JSON.stringify(item, undefined, 2)} for ${bidderName}`);
-
+    //  - bidder (String) Name of the bidder
+    bidItem(session, item, setSuccessFun, setErrorFun) {
         session
-            .call("com.market.item.bid", [item.name, item.new_price, bidderName], {}, { timeout: 5000 })
+            .call("com.market.item.bid", [item.name, item.new_price, item.bidder], {}, { timeout: 5000 })
             .then(
                 function (res) {
-                    console.log("-----------------------");
-                    console.log(`Response OK: ${res}`);
                     setSuccessFun(res);
                 },
                 function (err) {
-                    console.log("-----------------------");
-                    console.log(`Call has failed with error: ${JSON.stringify(err, undefined, 2)}`);
                     setErrorFun(err);
                 }
             );

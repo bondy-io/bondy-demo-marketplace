@@ -208,9 +208,8 @@ export default {
       { text: "Item", align: "start", value: "name" },
       { text: "Highest Price", value: "price" },
       { text: "Deadline", value: "deadline" },
-      { text: "Bidder", value: "winner" },
       { text: "Winner", value: "winner" },
-      { text: "Bid", value: "actions", sortable: false },
+      { text: "Actions", value: "actions", sortable: false },
     ],
     items: [],
     editedIndex: -1,
@@ -220,6 +219,7 @@ export default {
       price: null,
       deadline: null,
       winner: "",
+      bidder: "",
       new_price: null,
     },
     defaultItem: {
@@ -227,6 +227,7 @@ export default {
       price: null,
       deadline: null,
       winner: "",
+      bidder: "",
       new_price: null,
     },
     loading: false,
@@ -434,6 +435,7 @@ export default {
       if (this.bidderName != null) {
         this.editedIndex = this.items.indexOf(item);
         this.editedItem = Object.assign({}, item);
+        this.editedItem.new_price = this.editedItem.price;
         this.dialogBid = true;
       } else {
         this.setError("You must be registered to bid an item!");
@@ -441,10 +443,10 @@ export default {
     },
 
     bidItemConfirm() {
+      this.editedItem.bidder = this.bidderName;
       MarketHelper.bidItem(
         this.session,
         this.editedItem,
-        this.bidderName,
         this.setBidItemResult,
         this.setError
       );
