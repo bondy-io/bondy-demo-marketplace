@@ -76,28 +76,8 @@
                 ],
                 "resources": [
                     {
-                        "uri": "com.market.bidder.",
+                        "uri": "com.market.",
                         "match": "prefix"
-                    },
-                    {
-                        "uri": "com.market.get",
-                        "match": "exact"
-                    },
-                    {
-                        "uri": "com.market.item.added",
-                        "match": "exact"
-                    },
-                    {
-                        "uri": "com.market.item.bid",
-                        "match": "exact"
-                    },
-                    {
-                        "uri": "com.market.item.new_price",
-                        "match": "exact"
-                    },
-                    {
-                        "uri": "com.market.item.get",
-                        "match": "exact"
                     }
                 ],
                 "roles": [

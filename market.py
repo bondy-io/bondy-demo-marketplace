@@ -14,6 +14,7 @@ from demo_config import MARKET_ITEM_GET
 from demo_config import MARKET_ITEM_BID
 from demo_config import MARKET_ITEM_SELL
 from demo_config import MARKET_ITEM_NEW_PRICE
+from demo_config import MARKET_OPENED
 from item import Item
 
 
@@ -42,6 +43,9 @@ class Market:
         self._session.register(self._on_bid, MARKET_ITEM_BID)
         self._session.register(self._on_new_bidder, MARKET_BIDDER_ADD)
         self._session.register(self._on_bidder_gone, MARKET_BIDDER_GONE)
+
+        print("Market ready to accept new items and bids")
+        self._session.publish(MARKET_OPENED)
 
     def _on_new_bidder(self, name):
         if not name or name in self._bidders:

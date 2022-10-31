@@ -81,6 +81,7 @@ A bot has a name (`BOT_NAME` variable, default: _Bob_) and is configured to:
 A bot subscribes to 2 topics:
 * `com.market.item.added`: To know when a new item is on offer.
 * `com.market.item.new_price`: To know when there is a new accepted bid.
+* `com.market.opened`: To know when the market is connected and ready to accept bids.
 
 Similarly to the client, it calls some RPCs to try and win some items:
 * `com.market.bidder.add` to identify itself as a bidder.
@@ -189,7 +190,7 @@ Run the marketplace from the `make` target: `market`
 ```
 
 This will create the python virtual environment with all the dependencies required to run the script.
-The script then connects to Bondy and register the following URIs:
+The script then connects to Bondy and registers the following URIs:
 * `com.market.bidder.add`: When a new bigger joins, it has to give a name to be able to bid.
 * `com.market.bidder.gone`: When a client gently leave the market, i.e. no errors or interuptions.
 * `com.market.get`: To get all the listed items.
@@ -200,6 +201,7 @@ The script then connects to Bondy and register the following URIs:
 The market publishes the following topics:
 * `com.market.item.added`: When a new item is on offer.
 * `com.market.item.new_price`: When a bid was accepted.
+* `com.market.opened`: When `market` is connected and has registered the RPC URIs, it publishes this topic to let the listeners it is ready to accept calls.
 
 ## Troubleshooting
 

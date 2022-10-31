@@ -12,6 +12,7 @@ from demo_config import MARKET_ITEM_ADDED
 from demo_config import MARKET_ITEM_GET
 from demo_config import MARKET_ITEM_BID
 from demo_config import MARKET_ITEM_NEW_PRICE
+from demo_config import MARKET_OPENED
 from item import Item
 
 
@@ -45,11 +46,20 @@ class Bot:
 
         self._session = session
 
+        self._session.subscribe(self._on_market_opening, MARKET_OPENED)
+        try:
+            await self._on_market_opening()
+
+        except BaseException:
+            print("Market is not opened yet, waiting for the signal...")
+
+    async def _on_market_opening(self):
+
         await self._identify()
 
         print(
             f"""
-{self._name} joined the '{session.realm}' marketplace.
+{self._name} joined the '{self._session.realm}' marketplace.
 {self._name} will try to buy any item cheaper than ${self._limit+self._incr}.
 {self._name} will bid adding ${self._incr}.
 To make the bot more 'human' like:

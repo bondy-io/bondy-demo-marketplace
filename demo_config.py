@@ -15,6 +15,7 @@ MARKET_ITEM_BID = "com.market.item.bid"
 # PubSubs
 MARKET_ITEM_ADDED = "com.market.item.added"
 MARKET_ITEM_NEW_PRICE = "com.market.item.new_price"
+MARKET_OPENED = "com.market.opened"
 
 # Cryptosign users, their private key comes from an env var
 CRYTOSIGN_PRIVATE_KEY_VARS = {
