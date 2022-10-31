@@ -16,22 +16,10 @@ MARKET_ITEM_BID = "com.market.item.bid"
 MARKET_ITEM_ADDED = "com.market.item.added"
 MARKET_ITEM_NEW_PRICE = "com.market.item.new_price"
 
-# Authentication
-BOT_PRIVKEY = os.getenv("BOT_PRIVKEY") or die("Missing env BOT_PRIVKEY")
-MARKET_PRIVKEY = os.getenv("MARKET_PRIVKEY") or die("Missing env MARKET_PRIVKEY")
-
-AUTH_BOT = {
-    "cryptosign": {
-        "authid": "bot",
-        "privkey": BOT_PRIVKEY,
-    }
-}
-
-AUTH_MARKET = {
-    "cryptosign": {
-        "authid": "market",
-        "privkey": MARKET_PRIVKEY,
-    }
+# Cryptosign users, their private key comes from an env var
+CRYTOSIGN_PRIVATE_KEY_VARS = {
+    "bot": "BOT_PRIVKEY",
+    "market": "MARKET_PRIVKEY",
 }
 
 
@@ -40,15 +28,23 @@ def create_transport_config(url=BONDY_URL):
     return {"type": "websocket", "url": url, "serializers": ["json"]}
 
 
+def create_cryptosign_config(user_id, private_key):
+
+    return {"cryptosign": {"authid": user_id, "privkey": private_key}}
+
+
 def create_auth_config(user_id=None):
 
-    user_configs = {
-        "bot": AUTH_BOT,
-        "market": AUTH_MARKET,
-    }
+    # Cryptosign users
+    private_key_var = CRYTOSIGN_PRIVATE_KEY_VARS.get(user_id)
+    if private_key_var:
+        private_key = os.getenv(private_key_var) or die(
+            f"Missing env {private_key_var}"
+        )
+        return create_cryptosign_config(user_id, private_key)
 
     # Connect anonymously by default
-    return user_configs.get(user_id, None)
+    return None
 
 
 def create_autobahn_component_config(url=BONDY_URL, user_id=None, realm=BONDY_REALM):
