@@ -18,7 +18,23 @@ The demo implements a simple market maker as depicted in the following diagram.
 See further descriptions of each actor in the sections below.
 
 
-## Running the Demo
+## Running the Demo on Docker
+
+### Prerequisites
+
+* `make` (normally present in macOS, Linux and Windows)
+* [Docker](https://www.docker.com) (Docker Desktop in case you use macOS or Windows)
+
+### Run
+
+``` bash
+% make demo_docke
+```
+
+This will start Bondy, a market and four bot instances.
+You will then be able to interact with the market using the interactive client described below.
+
+## Running the Demo locally
 
 ### Prerequisites
 

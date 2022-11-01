@@ -33,10 +33,22 @@ webapp_docker:
 		--name bondy-marketplace-webapp \
 		-d bondy-marketplace-webapp
 
+.PHONY: demo_docker
+demo_docker:
+	docker compose -f docker-compose.yml up -d --force-recreate
+
 .PHONY: shutdown
 shutdown:
+	# From local runs
 	docker rm -fv bondy-demo
 	docker rm -fv bondy-marketplace-webapp
+	# From docker compose
+	docker compose -f docker-compose.yml rm --stop --force
+
+.PHONY: clear
+clear:
+	docker compose -f docker-compose.yml down --rmi local --timeout 0
+	docker image prune --force
 
 VENV?=venv-market
 

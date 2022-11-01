@@ -1,0 +1,83 @@
+services:
+
+    bondy:
+        container_name: bondy
+        image: leapsight/bondy:1.0.0-beta.64
+        environment:
+            BONDY_ERL_NODENAME: bondy@127.0.0.1
+            BONDY_ERL_DISTRIBUTED_COOKIE: bondy
+        env_file:
+            - .env
+        user: "0:1000"
+        ports:
+            # WS/HTTP
+            - "18080:18080"
+            # WS/HTTP Admin
+            - "18081:18081"
+            # TCP
+            - "18082:18082"
+            # HTTPS
+            - "18083:18083"
+            # Clustering
+            - "18086:18086"
+        volumes:
+            - ./bondy/etc:/bondy/etc
+
+    market:
+        container_name: market
+        build: .
+        command: market
+        environment:
+            BONDY_URL: ws://bondy:18080/ws
+        env_file:
+            - .env
+        depends_on:
+            - bondy
+
+    alice:
+        container_name: alice
+        build: .
+        command: bot Alice 3 10000 0.3 
+        environment:
+            BONDY_URL: ws://bondy:18080/ws
+        env_file:
+            - .env
+        depends_on:
+            - bondy
+            - market
+
+    tom:
+        container_name: tom
+        build: .
+        command: bot Tom 5 10000 0.5 
+        environment:
+            BONDY_URL: ws://bondy:18080/ws
+        env_file:
+            - .env
+        depends_on:
+            - bondy
+            - market
+
+    mary:
+        container_name: mary
+        build: .
+        command: bot Mary 7 10000 0.7 
+        environment:
+            BONDY_URL: ws://bondy:18080/ws
+        env_file:
+            - .env
+        depends_on:
+            - bondy
+            - market
+
+    victor:
+        container_name: victor
+        build: .
+        command: bot Victor 11 10000 1.1
+        environment:
+            BONDY_URL: ws://bondy:18080/ws
+        env_file:
+            - .env
+        depends_on:
+            - bondy
+            - market
