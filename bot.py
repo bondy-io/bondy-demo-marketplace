@@ -19,7 +19,7 @@ from item import Item
 class Bot:
     def __init__(self, name, incr=1.0, limit=100.0, lag=5):
 
-        self._name = name
+        self._name = name or "bot"
         self._incr = round(float(incr), 2)
         self._limit = round(float(limit) - self._incr, 2)
         self._lag = round(float(lag), 2)
@@ -37,10 +37,13 @@ class Bot:
 
     async def _identify(self):
 
-        while not self._name:
-            self._name = input("Enter the name of the bot: ")
+        basename = self._name
+        counter = 0
         while not await self._session.call(MARKET_BIDDER_ADD, self._name):
-            self._name = input("Name already taken, enter a different name: ")
+            prev_name = self._name
+            counter += 1
+            self._name = f"{basename}_{counter:02}"
+            print(f"'{prev_name}' already taken, trying '{self._name}'")
 
     async def _on_join(self, session, details):
 
