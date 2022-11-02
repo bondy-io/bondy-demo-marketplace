@@ -27,12 +27,14 @@ See further descriptions of each actor in the sections below.
 
 ### Run
 
+The default make target runs all the components in a Docker container.
 ``` bash
-% make demo_docke
+% make
 ```
 
-This will start Bondy, a market and four bot instances.
-You will then be able to interact with the market using the interactive client described below.
+This will start Bondy, a market, the web service and four bot instances.
+You will then be able to interact with the market from http://localhost:8080/.
+See below for more details about the market and the bots.
 
 ## Running the Demo locally
 
@@ -44,9 +46,8 @@ You will then be able to interact with the market using the interactive client d
 
 ### Setup
 
-The demo environment is started by the default make target.
 ``` bash
-% make
+% make demo_local
 ```
 
 This will run Bondy and the Web App on docker (if necessary), then start the marketplace.

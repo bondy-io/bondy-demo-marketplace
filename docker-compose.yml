@@ -25,59 +25,61 @@ services:
 
     market:
         container_name: market
-        build: .
+        extends:
+            file: docker-compose.pyapp.yml
+            service: pyapp
         command: market
-        environment:
-            BONDY_URL: ws://bondy:18080/ws
-        env_file:
-            - .env
         depends_on:
             - bondy
 
-    alice:
-        container_name: alice
-        build: .
-        command: bot Alice 3 10000 0.3 
-        environment:
-            BONDY_URL: ws://bondy:18080/ws
+    webapp:
+        container_name: webapp
+        build: ./webapp
+        image: bondy-marketplace-webapp
         env_file:
             - .env
+        ports:
+            - "8080:80"
+        depends_on:
+            - bondy
+            - market
+
+    alice:
+        container_name: alice
+        extends:
+            file: docker-compose.pyapp.yml
+            service: pyapp
+        command: bot Alice 3 10000 0.3 
         depends_on:
             - bondy
             - market
 
     tom:
         container_name: tom
-        build: .
+        extends:
+            file: docker-compose.pyapp.yml
+            service: pyapp
         command: bot Tom 5 10000 0.5 
-        environment:
-            BONDY_URL: ws://bondy:18080/ws
-        env_file:
-            - .env
         depends_on:
             - bondy
             - market
 
     mary:
         container_name: mary
-        build: .
+        extends:
+            file: docker-compose.pyapp.yml
+            service: pyapp
         command: bot Mary 7 10000 0.7 
-        environment:
-            BONDY_URL: ws://bondy:18080/ws
-        env_file:
-            - .env
         depends_on:
             - bondy
             - market
 
     victor:
         container_name: victor
-        build: .
+        extends:
+            file: docker-compose.pyapp.yml
+            service: pyapp
         command: bot Victor 11 10000 1.1
-        environment:
-            BONDY_URL: ws://bondy:18080/ws
-        env_file:
-            - .env
         depends_on:
             - bondy
             - market

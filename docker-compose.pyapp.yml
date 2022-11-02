@@ -1,0 +1,9 @@
+services:
+
+    pyapp:
+        build: .
+        image: bondy-marketplace-pyapp
+        environment:
+            BONDY_URL: ws://bondy:18080/ws
+        env_file:
+            - .env

@@ -1,14 +1,18 @@
 include .env
 export
 
-.PHONY: all
-all: bondy_docker webapp_docker market
+.PHONY: demo_docker
+demo_docker:
+	docker compose -f docker-compose.yml up -d --force-recreate
+
+.PHONY: demo_local
+demo_local: bondy_docker webapp_docker market
 
 .PHONY: bondy_docker
 bondy_docker:
-	@echo "Removing existing bondy-demo container"
-	docker stop bondy-demo || true
-	docker rm -fv bondy-demo || true
+	@echo "Removing existing bondy-marketplace-router container"
+	docker stop bondy-marketplace-router || true
+	docker rm -fv bondy-marketplace-router || true
 	docker run \
 		-e BONDY_ERL_NODENAME=bondy1@127.0.0.1 \
 		-e BONDY_ERL_DISTRIBUTED_COOKIE=bondy \
@@ -18,7 +22,7 @@ bondy_docker:
 		-p 18082:18082 \
 		-p 18086:18086 \
 		-u 0:1000 \
-		--name bondy-demo \
+		--name bondy-marketplace-router \
 		-v "${PWD}/bondy/etc:/bondy/etc" \
 		-d leapsight/bondy:1.0.0-beta.64
 
@@ -33,21 +37,19 @@ webapp_docker:
 		--name bondy-marketplace-webapp \
 		-d bondy-marketplace-webapp
 
-.PHONY: demo_docker
-demo_docker:
-	docker compose -f docker-compose.yml up -d --force-recreate
-
-.PHONY: shutdown
-shutdown:
+.PHONY: shutdown_docker
+shutdown_docker:
 	# From local runs
-	docker rm -fv bondy-demo
+	docker rm -fv bondy-marketplace-router
 	docker rm -fv bondy-marketplace-webapp
 	# From docker compose
 	docker compose -f docker-compose.yml rm --stop --force
 
-.PHONY: clear
-clear:
+.PHONY: clear_docker
+clear_docker:
 	docker compose -f docker-compose.yml down --rmi local --timeout 0
+	docker image rm --force bondy-marketplace-pyapp
+	docker image rm --force bondy-marketplace-webapp
 	docker image prune --force
 
 VENV?=venv-market
