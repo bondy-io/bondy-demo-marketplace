@@ -216,7 +216,9 @@ The script then connects to Bondy and registers the following URIs:
 
 The market publishes the following topics:
 * `com.market.item.added`: When a new item is on offer.
+* `com.market.item.expired`: When an item times out without any bids.
 * `com.market.item.new_price`: When a bid was accepted.
+* `com.market.item.sold`: When an item times out with a winner.
 * `com.market.opened`: When `market` is connected and has registered the RPC URIs, it publishes this topic to let the listeners it is ready to accept calls.
 
 ## Troubleshooting

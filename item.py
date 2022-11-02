@@ -44,6 +44,11 @@ class Item:
 
         return self.deadline.astimezone().strftime("%H:%M:%S")
 
+    def timeout(self):
+
+        timeout = self.deadline - now_utc()
+        return max(0, timeout.total_seconds())
+
     ############################################################################
     # For WAMP messages
 

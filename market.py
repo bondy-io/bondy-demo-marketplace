@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+import asyncio
 import signal
 
 from autobahn.asyncio.component import Component
@@ -8,12 +9,14 @@ from autobahn.asyncio.component import run
 from demo_config import create_autobahn_component_config
 from demo_config import MARKET_BIDDER_ADD
 from demo_config import MARKET_BIDDER_GONE
-from demo_config import MARKET_ITEM_ADDED
 from demo_config import MARKET_GET
-from demo_config import MARKET_ITEM_GET
+from demo_config import MARKET_ITEM_ADDED
 from demo_config import MARKET_ITEM_BID
-from demo_config import MARKET_ITEM_SELL
+from demo_config import MARKET_ITEM_EXPIRED
+from demo_config import MARKET_ITEM_GET
 from demo_config import MARKET_ITEM_NEW_PRICE
+from demo_config import MARKET_ITEM_SELL
+from demo_config import MARKET_ITEM_SOLD
 from demo_config import MARKET_OPENED
 from item import Item
 
@@ -84,9 +87,19 @@ class Market:
 
         item = Item(name, price, deadline)
         self._items[name] = item
+
+        loop = asyncio.get_running_loop()
+        loop.call_later(item.timeout(), self._on_item_timeout, item)
+
         print(f"New item starting at ${item.price} until {item.deadline_as_HMS()}.")
         self._session.publish(MARKET_ITEM_ADDED, **item.wamp_pack())
         return True
+
+    def _on_item_timeout(self, item):
+
+        print(f"Item '{item.name}' timed out at ${item.price} from {item.winner}")
+        topic = MARKET_ITEM_SOLD if item.winner else MARKET_ITEM_EXPIRED
+        self._session.publish(topic, **item.wamp_pack())
 
     def _on_bid(self, item_name, bid, bidder_name):
 

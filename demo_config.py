@@ -8,13 +8,15 @@ BONDY_REALM = os.getenv("BONDY_REALM", "com.market.demo")
 MARKET_BIDDER_ADD = "com.market.bidder.add"
 MARKET_BIDDER_GONE = "com.market.bidder.gone"
 MARKET_GET = "com.market.get"
+MARKET_ITEM_BID = "com.market.item.bid"
 MARKET_ITEM_GET = "com.market.item.get"
 MARKET_ITEM_SELL = "com.market.item.sell"
-MARKET_ITEM_BID = "com.market.item.bid"
 
 # PubSubs
 MARKET_ITEM_ADDED = "com.market.item.added"
+MARKET_ITEM_EXPIRED = "com.market.item.expired"
 MARKET_ITEM_NEW_PRICE = "com.market.item.new_price"
+MARKET_ITEM_SOLD = "com.market.item.sold"
 MARKET_OPENED = "com.market.opened"
 
 # Cryptosign users, their private key comes from an env var
