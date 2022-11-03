@@ -4,7 +4,6 @@ import nacl from "tweetnacl";
 export default {
 
     getAnonymousConnection(url, realm) {
-        console.log("-----------------------");
         console.log(`Running AutobahnJS ${autobahn.version}`);
         console.log(`Wamp Router Url='${url}'`);
         console.log(`Wamp Realm='${realm}'`);
@@ -17,7 +16,6 @@ export default {
     },
 
     getCryptosignConnection(url, realm, username, pkey) {
-        console.log("-----------------------");
         console.log(`Running AutobahnJS ${autobahn.version}`);
         console.log(`Wamp Router Url='${url}'`);
         console.log(`Wamp Realm='${realm}'`);
@@ -54,7 +52,7 @@ export default {
         await new Promise((r) => setTimeout(r, 2000));
 
         session
-            .call("com.market.get", [], {}, {timeout: 5000})
+            .call("com.market.get", [], {}, { timeout: 5000 })
             .then(
                 function (res) {
                     setItemsFun(res);
@@ -74,11 +72,9 @@ export default {
                 .subscribe(topic, onFun, { match: "exact" })
                 .then(
                     () => {
-                        console.log("-----------------------");
                         console.log(`Subscribed to topic '${topic}' successfully`);
                     },
                     (err) => {
-                        console.log("-----------------------");
                         console.log(
                             `Subscription to topic '${topic}' failed with error: ${err}`
                         );

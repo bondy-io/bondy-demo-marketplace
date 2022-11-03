@@ -153,9 +153,7 @@
                   label="Your bidder name"
                   counter="20"
                   maxlength="20"
-                  :rules="[
-                    () => !!bidderName || 'The bidder name is required',
-                  ]"
+                  :rules="[() => !!bidderName || 'The bidder name is required']"
                 ></v-text-field>
               </v-card-text>
               <v-card-actions>
@@ -187,10 +185,50 @@
     <v-alert type="success" v-model="alertSuccess" dismissible elevation="2">
       {{ showSuccessMsg }}
     </v-alert>
+    <v-spacer></v-spacer>
+    <template>
+      <v-card class="mx-auto">
+        <v-card-title class="blue-grey white--text">
+          <span class="text-h6">Realtime Event Logging</span>
+        </v-card-title>
+        <v-card-text class="py-0">
+          <v-timeline dense>
+            <v-slide-x-reverse-transition group hide-on-leave>
+              <v-timeline-item
+                v-for="event in events"
+                :key="event.id"
+                :color="event.color"
+                small
+                fill-dot
+              >
+                <v-row justify="end">
+                  <v-col>
+                    <strong>{{ event.time }}</strong>
+                  </v-col>
+                  <v-col>
+                    <strong>{{ event.text }}</strong>
+                  </v-col>
+                  <v-col>
+                    <strong>{{ event.item }}</strong>
+                  </v-col>
+                </v-row>
+              </v-timeline-item>
+            </v-slide-x-reverse-transition>
+          </v-timeline>
+        </v-card-text>
+      </v-card>
+    </template>
   </v-card>
 </template>
 <script>
 import { MarketHelper } from "@/helpers/mainExports.js";
+
+const COLORS = {
+  'added': "blue",
+  'changed': "orange",
+  'sold': "green",
+  'expired': "red",
+};
 
 export default {
   data: () => ({
@@ -203,12 +241,14 @@ export default {
     infoMsg: "",
     alertSuccess: false,
     successMsg: "",
+    events: [],
+    nonce: 0,
     search: "",
     headers: [
       { text: "Item", align: "start", value: "name" },
       { text: "Highest Price", value: "price" },
       { text: "Deadline", value: "deadline" },
-      { text: "Winner", value: "winner" },
+      { text: "Bidder / Winner", value: "winner" },
       { text: "Actions", value: "actions", sortable: false },
     ],
     items: [],
@@ -248,6 +288,7 @@ export default {
     // Published at every new successful bid.
     itemPriceChangedTopic: "com.market.item.new_price",
     itemSoldTopic: "com.market.item.sold",
+    itemExpiredTopic: "com.market.item.expired",
   }),
 
   computed: {
@@ -296,7 +337,6 @@ export default {
   },
 
   created() {
-    console.log("Component created");
     this.loading = true;
     // initialize with the retrieved items
     this.connection = this.inititialize(
@@ -304,19 +344,26 @@ export default {
       this.realm,
       this.itemAddedTopic,
       this.itemPriceChangedTopic,
-      this.itemSoldTopic
+      this.itemSoldTopic,
+      this.itemExpiredTopic
     );
   },
 
   beforeDestroy() {
-    console.log("Component Destroyed");
     this.connection.close("wamp.goodbye.normal", "Bondy Maketplace good bye");
     this.session = null;
     this.connection = null;
   },
 
   methods: {
-    inititialize(url, realm, itemAddedTopic, itemPriceChangedTopic, itemSoldTopic) {
+    inititialize(
+      url,
+      realm,
+      itemAddedTopic,
+      itemPriceChangedTopic,
+      itemSoldTopic,
+      itemExpiredTopic
+    ) {
       // const connection = MarketHelper.getAnonymousConnection(url, realm);
       const connection = MarketHelper.getCryptosignConnection(
         url,
@@ -330,7 +377,6 @@ export default {
 
       connection.onopen = function (session, details) {
         console.log(`Connected : ${JSON.stringify(details, undefined, 2)}`);
-        console.log("-----------------------");
 
         self.session = session;
 
@@ -351,7 +397,8 @@ export default {
         MarketHelper.subscribe(session, [
           [itemAddedTopic, self.onItemAdded],
           [itemPriceChangedTopic, self.onItemChanged],
-          [itemSoldTopic, self.onItemChanged],
+          [itemSoldTopic, self.onItemSold],
+          [itemExpiredTopic, self.onItemExpired],
         ]);
       };
 
@@ -363,7 +410,6 @@ export default {
             2
           )}`
         );
-        console.log("-----------------------");
       };
 
       // open the connection
@@ -383,16 +429,12 @@ export default {
       else return "blue";
     },
 
+    getColorEvent(type) {
+      return COLORS[type];
+    },
+
     onItemAdded(args, argsKW, details) {
       // item data is received in the argsKW!
-      console.log("-----------------------");
-      console.log(`Item has been added. args ${JSON.stringify(
-        args,
-        undefined,
-        2
-      )}
-                argsKW ${JSON.stringify(argsKW, undefined, 2)}
-                details: ${JSON.stringify(details, undefined, 2)}`);
       let item = Object.assign(
         {},
         {
@@ -402,20 +444,11 @@ export default {
         }
       );
       this.items.push(item);
-      this.infoMsg = `The item ${item.name} has been added`;
-      this.alertInfo = true;
+      this.addEvent('added', `The item ${item.name} has been added`, item);
     },
 
-    onItemChanged(args, argsKW, details) {
+    itemChanged(argsKW) {
       // item data is received in the argsKW!
-      console.log("-----------------------");
-      console.log(`Item has been changed. args ${JSON.stringify(
-        args,
-        undefined,
-        2
-      )}
-                argsKW ${JSON.stringify(argsKW, undefined, 2)}
-                details: ${JSON.stringify(details, undefined, 2)}`);
       let item = Object.assign(
         {},
         {
@@ -426,9 +459,25 @@ export default {
         }
       );
       let index = this.items.findIndex((item) => item.name == argsKW.name);
-      Object.assign(this.items[index], item);
-      this.infoMsg = `The item ${item.name} has been changed`;
-      this.alertInfo = true;
+      if (index != -1) {
+        Object.assign(this.items[index], item)
+      }
+      return item;
+    },
+
+    onItemChanged(args, argsKW, details) {
+      const item = this.itemChanged(argsKW);
+      this.addEvent('changed', `The item ${item.name} has been changed`, item);
+    },
+
+    onItemSold(args, argsKW, details) {
+      const item = this.itemChanged(argsKW);
+      this.addEvent('sold', `The item ${item.name} was sold`, item);
+    },
+
+    onItemExpired(args, argsKW, details) {
+      const item = this.itemChanged(argsKW);
+      this.addEvent('expired', `The item ${item.name} has expired`, item);
     },
 
     bidItem(item) {
@@ -530,6 +579,25 @@ export default {
         );
       }
       this.close();
+    },
+
+    addEvent(type, text, item) {
+      const time = new Date().toUTCString();
+      this.events.unshift({
+        id: this.nonce++,
+        time: time,
+        text: text,
+        item: JSON.stringify(
+          { price: item.price, winner: item.winner, deadline: item.deadline },
+          undefined,
+          2
+        ),
+        color: this.getColorEvent(type),
+      });
+
+      if (this.nonce > 15) {
+        this.events.pop();
+      }
     },
   },
 };
