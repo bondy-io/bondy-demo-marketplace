@@ -26,9 +26,8 @@ services:
     market:
         container_name: market
         extends:
-            file: docker-compose.pyapp.yml
-            service: pyapp
-        command: market
+            file: docker-compose.market.yml
+            service: market
         depends_on:
             - bondy
 
@@ -47,9 +46,9 @@ services:
     alice:
         container_name: alice
         extends:
-            file: docker-compose.pyapp.yml
-            service: pyapp
-        command: bot Alice 3 10000 0.3 
+            file: docker-compose.bot.yml
+            service: bot
+        command: Alice 3 10000 0.3 
         depends_on:
             - bondy
             - market
@@ -57,9 +56,9 @@ services:
     tom:
         container_name: tom
         extends:
-            file: docker-compose.pyapp.yml
-            service: pyapp
-        command: bot Tom 5 10000 0.5 
+            file: docker-compose.bot.yml
+            service: bot
+        command: Tom 5 10000 0.5 
         depends_on:
             - bondy
             - market
@@ -67,9 +66,9 @@ services:
     mary:
         container_name: mary
         extends:
-            file: docker-compose.pyapp.yml
-            service: pyapp
-        command: bot Mary 7 10000 0.7 
+            file: docker-compose.bot.yml
+            service: bot
+        command: Mary 7 10000 0.7 
         depends_on:
             - bondy
             - market
@@ -77,9 +76,9 @@ services:
     victor:
         container_name: victor
         extends:
-            file: docker-compose.pyapp.yml
-            service: pyapp
-        command: bot Victor 11 10000 1.1
+            file: docker-compose.bot.yml
+            service: bot
+        command: Victor 11 10000 1.1
         depends_on:
             - bondy
             - market

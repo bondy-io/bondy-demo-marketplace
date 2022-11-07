@@ -1,0 +1,11 @@
+services:
+
+    bot:
+        build:
+            context: .
+            dockerfile: bot.Dockerfile
+        image: bondy-marketplace-bot
+        environment:
+            BONDY_URL: ws://bondy:18080/ws
+        env_file:
+            - .env

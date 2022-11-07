@@ -1,0 +1,11 @@
+services:
+
+    market:
+        build:
+            context: .
+            dockerfile: market.Dockerfile
+        image: bondy-marketplace-market
+        environment:
+            BONDY_URL: ws://bondy:18080/ws
+        env_file:
+            - .env

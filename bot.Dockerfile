@@ -13,7 +13,8 @@ RUN pip3 install -r pip_reqs.txt
 
 # install the app
 WORKDIR /app
-COPY ./*.py .
+COPY ./bot.py .
+COPY ./demo_config.py .
+COPY ./item.py .
 
-ENTRYPOINT [ "python3", "-u", "-m" ]
-CMD [ "market" ]
+ENTRYPOINT [ "python3", "-u", "-m", "bot" ]

@@ -48,7 +48,8 @@ shutdown_docker:
 .PHONY: clear_docker
 clear_docker:
 	docker compose -f docker-compose.yml down --rmi local --timeout 0
-	docker image rm --force bondy-marketplace-pyapp
+	docker image rm --force bondy-marketplace-bot
+	docker image rm --force bondy-marketplace-market
 	docker image rm --force bondy-marketplace-webapp
 	docker image prune --force
 
