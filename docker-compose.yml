@@ -2,7 +2,7 @@ services:
 
     bondy:
         container_name: bondy
-        image: leapsight/bondy:1.0.0-beta.64
+        image: leapsight/bondy:1.0.0-beta.67
         environment:
             BONDY_ERL_NODENAME: bondy@127.0.0.1
             BONDY_ERL_DISTRIBUTED_COOKIE: bondy

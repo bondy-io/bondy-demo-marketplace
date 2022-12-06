@@ -24,7 +24,7 @@ bondy_docker:
 		-u 0:1000 \
 		--name bondy-marketplace-router \
 		-v "${PWD}/bondy/etc:/bondy/etc" \
-		-d leapsight/bondy:1.0.0-beta.64
+		-d leapsight/bondy:1.0.0-beta.67
 
 .PHONY: webapp_docker
 webapp_docker:
@@ -52,6 +52,10 @@ clear_docker:
 	docker image rm --force bondy-marketplace-market
 	docker image rm --force bondy-marketplace-webapp
 	docker image prune --force
+
+.PHONY: stop_docker
+stop_docker:
+	docker compose -f docker-compose.yml rm --stop --force
 
 VENV?=venv-market
 
