@@ -16,21 +16,6 @@
         "schemes":[
             "http"
         ],
-        "forward_spec":{
-            "action":{
-                "type":"forward",
-                "host":"{{variables.host}}"
-            },
-            "response":{
-                "on_error":{
-                    "body":"{{variables.wamp_error_body}}"
-                },
-                "on_result":{
-                    "uri":"{{action.result.uri}}",
-                    "body":"{{action.result.body}}"
-                }
-            }
-        },
         "cors_headers":{
             "access-control-allow-origin":"*",
             "access-control-allow-credentials":"true",
