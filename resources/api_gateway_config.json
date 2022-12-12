@@ -1,0 +1,294 @@
+{
+    "id":"com.market.demo",
+    "name":"Marketplace Demo API",
+    "host":"_",
+    "realm_uri":"com.market.demo",
+    "meta":{   
+    },
+    "variables":{
+        "oauth2":{
+            "type":"oauth2",
+            "flow":"resource_owner_password_credentials",
+            "token_path":"/oauth/token",
+            "revoke_token_path":"/oauth/revoke",
+            "schemes":"{{variables.schemes}}"
+        },
+        "query_spec":"{{request.query_params |> with([_q,_p,_limit,_sort,_page,_include,_from,_to])}}",
+        "query_match":"{{request.query_params |> without([_q,_p,_limit,_sort,_page,_include,_from,_to])}}",
+        "schemes":[
+            "http"
+        ],
+        "forward_spec":{
+            "action":{
+                "type":"forward",
+                "host":"{{variables.host}}"
+            },
+            "response":{
+                "on_error":{
+                    "body":"{{variables.wamp_error_body}}"
+                },
+                "on_result":{
+                    "uri":"{{action.result.uri}}",
+                    "body":"{{action.result.body}}"
+                }
+            }
+        },
+        "cors_headers":{
+            "access-control-allow-origin":"*",
+            "access-control-allow-credentials":"true",
+            "access-control-allow-methods":"GET,HEAD,OPTIONS,PUT,PATCH,POST,DELETE",
+            "access-control-allow-headers":"origin,x-requested-with,content-type,accept,authorization,accept-language",
+            "access-control-max-age":"86400"
+        },
+        "wamp_error_body":"{{action.error.kwargs |> put(code, {{action.error.error_uri}})}}"
+    },
+    "defaults":{
+        "retries":0,
+        "timeout":15000,
+        "connect_timeout":5000,
+        "schemes":"{{variables.schemes}}",
+        "security":"{{variables.oauth2}}",
+        "headers":"{{variables.cors_headers}}"
+    },
+    "status_codes": {
+        "com.example.error.not_found": 404,
+        "com.example.error.unknown_error": 500,
+        "com.example.error.internal_error": 500
+    },
+    "versions": {
+        "1.0.0":{
+            "base_path":"/[v1.0]",
+            "variables":{
+                "host":"http://localhost:8080"
+            },
+            "defaults":{
+                "timeout":20000
+            },
+            "languages":[
+                "en"
+            ],
+            "paths":{
+                "/market":{
+                    "is_collection":true,
+                    "options":{
+                        "action":{
+
+                        },
+                        "response":{
+                            "on_error":{
+                                "body":""
+                            },
+                            "on_result":{
+                                "body":""
+                            }
+                        }
+                    },
+                    "get":{
+                        "action":{
+                            "type":"wamp_call",
+                            "procedure":"com.market.get",
+                            "options":{
+                            },
+                            "args":[
+                            ],
+                            "kwargs":{
+                            }
+                        },
+                        "response":{
+                            "on_error":{
+                                "status_code":"{{status_codes |> get({{action.error.error_uri}}, 500) |> integer}}",
+                                "body":"{{variables.wamp_error_body}}"
+                            },
+                            "on_result":{
+                                "body":"{{action.result.args |> head}}"
+                            }
+                        }
+                    }
+                },
+                "/market/item":{
+                    "is_collection":false,
+                    "options":{
+                        "action":{
+
+                        },
+                        "response":{
+                            "on_error":{
+                                "body":""
+                            },
+                            "on_result":{
+                                "body":""
+                            }
+                        }
+                    },
+                    "post":{
+                        "action":{
+                            "type":"wamp_call",
+                            "procedure":"com.market.item.sell",
+                            "options":{
+      
+                            },
+                            "args":[
+                                "{{request.body |> get(name)}}",
+                                "{{request.body |> get(price)}}",
+                                "{{request.body |> get(deadline)}}"
+                            ],
+                            "kwargs":{
+                            }
+                        },
+                        "response":{
+                            "on_error":{
+                                "status_code":"{{status_codes |> get({{action.error.error_uri}}, 500) |> integer}}",
+                                "body":"{{variables.wamp_error_body}}"
+                            },
+                            "on_result":{
+                                "body":"{{action.result.args |> head}}"
+                            }
+                        }
+                    }
+                },
+                "/market/item/:name":{
+                    "is_collection":false,
+                    "options":{
+                        "action":{
+
+                        },
+                        "response":{
+                            "on_error":{
+                                "body":""
+                            },
+                            "on_result":{
+                                "body":""
+                            }
+                        }
+                    },
+                    "get":{
+                        "action":{
+                            "type":"wamp_call",
+                            "procedure":"com.market.item.get",
+                            "options":{
+      
+                            },
+                            "args":[
+                                "{{request.bindings.name}}"
+                            ],
+                            "kwargs":{
+                            }
+                        },
+                        "response":{
+                            "on_error":{
+                                "status_code":"{{status_codes |> get({{action.error.error_uri}}, 500) |> integer}}",
+                                "body":"{{variables.wamp_error_body}}"
+                            },
+                            "on_result":{
+                                "body":"{{action.result.args |> head}}"
+                            }
+                        }
+                    },
+                    "put":{
+                        "action":{
+                            "type":"wamp_call",
+                            "procedure":"com.market.item.bid",
+                            "options":{
+      
+                            },
+                            "args":[
+                                "{{request.bindings.name}}",
+                                "{{request.body |> get(price)}}",
+                                "{{request.body |> get(bidder)}}"
+                            ],
+                            "kwargs":{
+                            }
+                        },
+                        "response":{
+                            "on_error":{
+                                "status_code":"{{status_codes |> get({{action.error.error_uri}}, 500) |> integer}}",
+                                "body":"{{variables.wamp_error_body}}"
+                            },
+                            "on_result":{
+                                "body":"{{action.result.args |> head}}"
+                            }
+                        }
+                    }
+                },
+                "/market/bidder":{
+                    "is_collection":false,
+                    "options":{
+                        "action":{
+
+                        },
+                        "response":{
+                            "on_error":{
+                                "body":""
+                            },
+                            "on_result":{
+                                "body":""
+                            }
+                        }
+                    },
+                    "post":{
+                        "action":{
+                            "type":"wamp_call",
+                            "procedure":"com.market.bidder.add",
+                            "options":{
+      
+                            },
+                            "args":[
+                                "{{request.body |> get(name)}}"
+                            ],
+                            "kwargs":{
+                            }
+                        },
+                        "response":{
+                            "on_error":{
+                                "status_code":"{{status_codes |> get({{action.error.error_uri}}, 500) |> integer}}",
+                                "body":"{{variables.wamp_error_body}}"
+                            },
+                            "on_result":{
+                                "body":"{{action.result.args |> head}}"
+                            }
+                        }
+                    }
+                },
+                "/market/bidder/:name":{
+                    "is_collection":false,
+                    "options":{
+                        "action":{
+    
+                        },
+                        "response":{
+                            "on_error":{
+                                "body":""
+                            },
+                            "on_result":{
+                                "body":""
+                            }
+                        }
+                    },
+                    "delete":{
+                        "action":{
+                            "type":"wamp_call",
+                            "procedure":"com.market.bidder.gone",
+                            "options":{
+      
+                            },
+                            "args":[
+                                "{{request.bindings.name}}"
+                            ],
+                            "kwargs":{
+                            }
+                        },
+                        "response":{
+                            "on_error":{
+                                "status_code":"{{status_codes |> get({{action.error.error_uri}}, 500) |> integer}}",
+                                "body":"{{variables.wamp_error_body}}"
+                            },
+                            "on_result":{
+                                "body":"{{action.result.args |> head}}"
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

@@ -4,7 +4,9 @@
         "description": "The market realm",
         "authmethods": [
             "cryptosign",
-            "anonymous"
+            "anonymous",
+            "oauth2",
+            "password"
         ],
         "security_enabled": true,
         "users": [
@@ -33,6 +35,26 @@
                 ],
                 "groups": [
                     "urn:group:webapp"
+                ]
+            },
+            {
+                "username": "postman",
+                "password": "${POSTMAN_APP_PASSWORD}",
+                "meta": {
+                    "description": "Postman app user for testing purposes"
+                },
+                "groups": [
+                    "api_clients"
+                ]
+            },
+            {
+                "username": "victor",
+                "password": "${VICTOR_USER_PASSWORD}",
+                "meta": {
+                    "description": "Victor end user for testing purposes"
+                },
+                "groups": [
+                    "resource_owners"
                 ]
             }
         ],
@@ -65,6 +87,20 @@
                 "groups": [],
                 "meta": {
                     "description": "Group for the market webapp client that handles sales, bids and receives events."
+                }
+            },
+            {
+                "name": "resource_owners",
+                "groups": [],
+                "meta": {
+                    "description": "OAuth2 Resource Owners. An entity capable of authorizing access to a protected resource."
+                }
+            },
+            {
+                "name": "api_clients",
+                "groups": [],
+                "meta": {
+                    "description": "OAuth2 confidential client. A third-party application that wants access to the private resources of the Resource Owner. The OAuth client can make protected resource requests on behalf of the Resource Owner after the latter grants it authorization."
                 }
             }
         ],
@@ -129,6 +165,32 @@
                 "roles": [
                     "urn:group:webapp"
                 ]
+            },
+            {
+                "permissions": [
+                    "wamp.subscribe",
+                    "wamp.unsubscribe",
+                    "wamp.call",
+                    "wamp.cancel",
+                    "wamp.publish"
+                ],
+                "uri": "*",
+                "roles": [
+                    "api_clients"
+                ]
+            },
+            {
+                "permissions": [
+                    "wamp.subscribe",
+                    "wamp.unsubscribe",
+                    "wamp.call",
+                    "wamp.cancel",
+                    "wamp.publish"
+                ],
+                "uri": "*",
+                "roles": [
+                    "resource_owners"
+                ]
             }
         ],
         "sources": [
@@ -148,6 +210,22 @@
                 "cidr": "0.0.0.0/0",
                 "meta": {
                     "description": "Allows all users from any network authenticate as anonymous."
+                }
+            },
+            {
+                "usernames": "all",
+                "authmethod": "password",
+                "cidr": "0.0.0.0/0",
+                "meta": {
+                    "description": "Allows all users from any network authenticate using password authentication method."
+                }
+            },
+            {
+                "usernames": "all",
+                "authmethod": "oauth2",
+                "cidr": "0.0.0.0/0",
+                "meta": {
+                    "description": "Allows all users from any network authenticate using password credentials. This covers OAuth2 Client Credentials and Resource Owner Password flows."
                 }
             }
         ]
