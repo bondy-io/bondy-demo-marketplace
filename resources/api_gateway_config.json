@@ -13,8 +13,6 @@
             "revoke_token_path":"/oauth/revoke",
             "schemes":"{{variables.schemes}}"
         },
-        "query_spec":"{{request.query_params |> with([_q,_p,_limit,_sort,_page,_include,_from,_to])}}",
-        "query_match":"{{request.query_params |> without([_q,_p,_limit,_sort,_page,_include,_from,_to])}}",
         "schemes":[
             "http"
         ],
